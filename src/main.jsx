@@ -280,11 +280,6 @@ function OpeningScene({ onOpen }) {
       </div>
       <div className="opening-copy">
         <p>THE LINK HOTEL SEOUL</p>
-        <h2>
-          지성
-          <span>&</span>
-          솔
-        </h2>
         <button type="button" onClick={handleOpen} disabled={leaving}>
           초대장 열기
           <ChevronDown size={16} />
