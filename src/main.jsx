@@ -121,9 +121,11 @@ const galleryImages = [
   {
     src: asset("gallery-venue.png"),
     alt: "플라워 아치가 있는 웨딩홀 사진",
-    caption: "The Link Hall",
+    caption: "Ceremony",
   },
 ];
+
+const heroPetals = Array.from({ length: 12 }, (_, index) => index);
 
 function encodedVenueQuery() {
   return encodeURIComponent(`${wedding.venue.name} ${wedding.venue.address}`);
@@ -344,6 +346,11 @@ function Hero({ onShare }) {
     <section id="intro" className="hero-section" data-reveal>
       <img className="hero-photo" src={galleryImages[0].src} alt={galleryImages[0].alt} />
       <div className="hero-overlay" />
+      <div className="hero-petals" aria-hidden="true">
+        {heroPetals.map((item) => (
+          <span key={item} />
+        ))}
+      </div>
       <div className="line-flower" aria-hidden="true">
         <span />
         <span />
@@ -578,7 +585,7 @@ function TransportSection({ showToast }) {
         <span className="station station-b">신도림역</span>
         <div className="map-pin">
           <MapPin size={20} />
-          <span>THE LINK</span>
+          <span>VENUE</span>
         </div>
       </div>
 
