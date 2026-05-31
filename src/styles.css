@@ -86,192 +86,6 @@ img {
   background: linear-gradient(90deg, var(--deep), var(--gold), var(--mauve));
 }
 
-.opening-scene {
-  --tilt-x: 0deg;
-  --tilt-y: 0deg;
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: grid;
-  grid-template-rows: 1fr auto;
-  place-items: center;
-  gap: 22px;
-  padding: 26px;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 18%, rgba(200, 161, 93, 0.2), transparent 28%),
-    linear-gradient(120deg, rgba(255, 255, 255, 0.18), transparent 34% 68%, rgba(255, 255, 255, 0.08)),
-    linear-gradient(180deg, #22191f, #b99abd);
-  animation: sceneIn 420ms ease both;
-  touch-action: manipulation;
-}
-
-.opening-scene::before,
-.opening-scene::after {
-  content: "";
-  position: absolute;
-  width: 420px;
-  height: 420px;
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  border-radius: 50%;
-}
-
-.opening-scene::before {
-  left: -160px;
-  top: 10%;
-}
-
-.opening-scene::after {
-  right: -180px;
-  bottom: 6%;
-}
-
-.opening-scene.is-leaving {
-  pointer-events: none;
-  animation: sceneOut 900ms cubic-bezier(0.65, 0, 0.35, 1) both;
-}
-
-.opening-envelope {
-  position: relative;
-  z-index: 1;
-  width: min(82vw, 340px);
-  height: 410px;
-  filter: drop-shadow(0 24px 52px rgba(75, 57, 75, 0.18));
-  perspective: 1200px;
-  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
-  transition: transform 240ms ease;
-}
-
-.opening-card {
-  position: absolute;
-  left: 6%;
-  top: 0;
-  z-index: 2;
-  width: 88%;
-  height: 275px;
-  padding: 42px 24px;
-  border: 1px solid rgba(42, 38, 38, 0.08);
-  border-radius: 16px;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.72), transparent 48%),
-    linear-gradient(180deg, #fffdfb, #f4ebef);
-  text-align: center;
-  transform: translateY(70px);
-  animation: cardLift 1.2s 260ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
-}
-
-.opening-card::before,
-.opening-card::after {
-  content: "";
-  position: absolute;
-  inset: 16px;
-  border: 1px solid rgba(90, 72, 88, 0.1);
-  pointer-events: none;
-}
-
-.opening-card::after {
-  inset: 28px;
-  border-style: dashed;
-}
-
-.opening-card p,
-.opening-copy p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.opening-card h1 {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 10px;
-  margin: 10px 0 0;
-  font-family: var(--font-serif);
-  font-size: 3.7rem;
-  font-weight: 600;
-  line-height: 0.92;
-  white-space: nowrap;
-}
-
-.opening-card h1 span {
-  color: var(--mauve);
-  font-family: var(--font-script);
-  font-size: 1.9rem;
-}
-
-.opening-card small {
-  display: block;
-  margin-top: 18px;
-  color: var(--soft-ink);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-}
-
-.envelope-pocket,
-.envelope-flap {
-  position: absolute;
-  left: 0;
-  bottom: 38px;
-  width: 100%;
-  border: 1px solid rgba(72, 58, 68, 0.1);
-  border-radius: 16px;
-}
-
-.envelope-pocket {
-  z-index: 3;
-  height: 230px;
-  background:
-    linear-gradient(135deg, transparent 0 50%, rgba(255, 255, 255, 0.42) 50%),
-    linear-gradient(225deg, transparent 0 50%, rgba(198, 166, 196, 0.2) 50%),
-    linear-gradient(145deg, #fffdfb, #e9dbe8);
-  clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
-}
-
-.envelope-flap {
-  z-index: 4;
-  bottom: 152px;
-  height: 128px;
-  background: linear-gradient(145deg, #fffdfb, #e5d6e4);
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  transform-origin: 50% 100%;
-  animation: flapOpen 1.05s 220ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
-}
-
-.opening-seal {
-  position: absolute;
-  left: 50%;
-  bottom: 146px;
-  z-index: 5;
-  display: grid;
-  width: 70px;
-  height: 70px;
-  place-items: center;
-  border-radius: 50%;
-  background: linear-gradient(145deg, var(--deep), #3b2e25);
-  color: #fff;
-  font-family: var(--font-serif);
-  font-size: 1.08rem;
-  transform: translateX(-50%);
-  animation: sealLift 1s 330ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
-}
-
-.opening-copy {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  gap: 14px;
-  justify-items: center;
-  text-align: center;
-  animation: copyRise 780ms 900ms ease both;
-}
-
-.opening-copy button,
-.share-mini,
 .primary-action,
 .ghost-action,
 .copy-button,
@@ -293,8 +107,6 @@ img {
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease;
 }
 
-.opening-copy button,
-.share-mini,
 .primary-action,
 .wide-action {
   border-color: transparent;
@@ -302,16 +114,6 @@ img {
   color: #fff;
 }
 
-.opening-copy button {
-  padding: 0 18px;
-}
-
-.opening-copy button:disabled {
-  cursor: default;
-  opacity: 0.72;
-}
-
-.share-mini:active,
 .primary-action:active,
 .ghost-action:active,
 .copy-button:active,
@@ -322,67 +124,6 @@ img {
 .floating-dock a:active,
 .floating-dock button:active {
   transform: translateY(1px);
-}
-
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  display: flex;
-  width: min(100%, 430px);
-  margin: 0 auto;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 11px 12px;
-  border-bottom: 1px solid var(--line);
-  background: rgba(255, 253, 251, 0.9);
-  box-shadow: 0 14px 34px rgba(21, 16, 19, 0.16);
-  backdrop-filter: blur(18px);
-}
-
-.brand {
-  display: inline-flex;
-  min-width: 0;
-  align-items: center;
-  gap: 10px;
-}
-
-.brand-mark {
-  display: grid;
-  width: 34px;
-  height: 34px;
-  flex: 0 0 auto;
-  place-items: center;
-  border-radius: 50%;
-  background: linear-gradient(145deg, var(--deep), #342721);
-  color: #fff;
-  font-family: var(--font-serif);
-  font-weight: 600;
-}
-
-.brand strong,
-.brand small {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.brand strong {
-  font-size: 0.88rem;
-  font-weight: 800;
-}
-
-.brand small {
-  color: var(--muted);
-  font-size: 0.7rem;
-}
-
-.share-mini {
-  min-height: 42px;
-  padding: 0 13px;
-  font-size: 0.82rem;
 }
 
 .app-shell {
@@ -411,7 +152,7 @@ img {
 
 .hero-section {
   position: relative;
-  min-height: min(820px, calc(100svh - 60px));
+  min-height: min(820px, 100svh);
   overflow: hidden;
   background: var(--charcoal);
   color: #fff;
@@ -1413,86 +1154,6 @@ img {
   transform: translate(-50%, 0);
 }
 
-@keyframes sceneIn {
-  from {
-    opacity: 0;
-    transform: scale(1.02);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes sceneOut {
-  0% {
-    opacity: 1;
-  }
-  72% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.04);
-  }
-}
-
-@keyframes cardLift {
-  0% {
-    opacity: 0.7;
-    transform: translateY(116px) scale(0.94);
-  }
-  58% {
-    opacity: 1;
-    transform: translateY(-10px) scale(1.02);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes flapOpen {
-  0% {
-    opacity: 1;
-    transform: translateY(0) rotateX(0deg);
-  }
-  62% {
-    opacity: 1;
-    transform: translateY(-116px) rotateX(-178deg);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-146px) rotateX(-178deg) scaleY(0.2);
-  }
-}
-
-@keyframes sealLift {
-  0% {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-  }
-  62% {
-    opacity: 1;
-    transform: translateX(-50%) translateY(-106px) scale(0.74);
-  }
-  100% {
-    opacity: 0;
-    transform: translateX(-50%) translateY(-144px) scale(0.58);
-  }
-}
-
-@keyframes copyRise {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @keyframes dotPulse {
   0%,
   70%,
@@ -1530,10 +1191,6 @@ img {
     padding-inline: 30px;
   }
 
-  .opening-card h1 {
-    font-size: 3.15rem;
-  }
-
   .hero-copy h1 {
     font-size: 2rem;
   }
@@ -1552,13 +1209,8 @@ img {
 }
 
 @media (min-width: 720px) {
-  .topbar {
-    margin-top: 48px;
-    border: 1px solid rgba(255, 255, 255, 0.72);
-    border-radius: 16px 16px 0 0;
-  }
-
   .app-shell {
+    margin-top: 48px;
     margin-bottom: 48px;
   }
 }
@@ -1576,10 +1228,6 @@ img {
   [data-reveal] {
     opacity: 1;
     transform: none;
-  }
-
-  .opening-scene {
-    animation: none;
   }
 
   .hero-petals span {

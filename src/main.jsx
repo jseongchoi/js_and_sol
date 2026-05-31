@@ -258,89 +258,6 @@ function useScrollEffects() {
   }, []);
 }
 
-function OpeningScene({ onOpen }) {
-  const [leaving, setLeaving] = useState(false);
-  const sceneRef = useRef(null);
-
-  function handleOpen() {
-    setLeaving(true);
-    window.setTimeout(onOpen, 900);
-  }
-
-  function handlePointerMove(event) {
-    if (!sceneRef.current || leaving) return;
-    const rect = sceneRef.current.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
-
-    sceneRef.current.style.setProperty("--tilt-x", `${(-y * 5).toFixed(2)}deg`);
-    sceneRef.current.style.setProperty("--tilt-y", `${(x * 6).toFixed(2)}deg`);
-  }
-
-  function resetPointer() {
-    if (!sceneRef.current) return;
-    sceneRef.current.style.setProperty("--tilt-x", "0deg");
-    sceneRef.current.style.setProperty("--tilt-y", "0deg");
-  }
-
-  return (
-    <div
-      ref={sceneRef}
-      className={`opening-scene ${leaving ? "is-leaving" : ""}`}
-      role="dialog"
-      aria-label="청첩장 열기"
-      onPointerMove={handlePointerMove}
-      onPointerLeave={resetPointer}
-    >
-      <div className="opening-envelope">
-        <div className="opening-card">
-          <p>Wedding Invitation</p>
-          <h1>
-            {wedding.groom.shortName}
-            <span>&</span>
-            {wedding.bride.shortName}
-          </h1>
-          <small>
-            {wedding.date.year}.{wedding.date.month}.{wedding.date.day}
-          </small>
-        </div>
-        <div className="envelope-pocket" />
-        <div className="envelope-flap" />
-        <div className="opening-seal">J&S</div>
-      </div>
-
-      <div className="opening-copy">
-        <p>{wedding.venue.displayName}</p>
-        <button type="button" onClick={handleOpen} disabled={leaving}>
-          초대장 열기
-          <ChevronDown size={16} />
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function TopBar({ onShare }) {
-  return (
-    <>
-      <div className="scroll-progress" aria-hidden="true" />
-      <header className="topbar" aria-label="모바일 청첩장">
-        <a className="brand" href="#intro" aria-label="처음으로 이동">
-          <span className="brand-mark">J</span>
-          <span>
-            <strong>Jisung & Sol</strong>
-            <small>Wedding Invitation</small>
-          </span>
-        </a>
-        <button className="share-mini" type="button" onClick={onShare}>
-          <Share2 size={16} strokeWidth={2.2} />
-          공유
-        </button>
-      </header>
-    </>
-  );
-}
-
 function Hero({ onShare }) {
   return (
     <section id="intro" className="hero-section" data-reveal>
@@ -754,16 +671,10 @@ function Toast({ message }) {
 
 function App() {
   const [toast, showToast] = useToast();
-  const [opened, setOpened] = useState(() => sessionStorage.getItem("invitation-opened-v2") === "true");
   const [lightboxItem, setLightboxItem] = useState(null);
 
   useReveal();
   useScrollEffects();
-
-  function openInvitation() {
-    sessionStorage.setItem("invitation-opened-v2", "true");
-    setOpened(true);
-  }
 
   async function handleShare() {
     const shareData = {
@@ -790,8 +701,7 @@ function App() {
 
   return (
     <>
-      {!opened && <OpeningScene onOpen={openInvitation} />}
-      <TopBar onShare={handleShare} />
+      <div className="scroll-progress" aria-hidden="true" />
       <main className="app-shell">
         <Hero onShare={handleShare} />
         <DateMark />
