@@ -396,10 +396,8 @@ img {
 .couple-sign {
   margin-top: 34px;
   color: var(--ink);
-  font-family: var(--font-hand);
-  font-size: 1.18rem;
-  font-weight: 400;
-  letter-spacing: 0.01em;
+  font-size: 0.92rem;
+  letter-spacing: 0.03em;
 }
 
 .section-head {
@@ -447,8 +445,8 @@ img {
 .rsvp-section h2 {
   margin: 0;
   color: var(--ink);
-  font-family: var(--font-hand);
-  font-size: 1.26rem;
+  font-family: "Noto Serif KR", var(--font-serif);
+  font-size: 1.05rem;
   font-weight: 500;
   line-height: 1.5;
 }
@@ -488,9 +486,8 @@ img {
 }
 
 .calendar-title strong {
-  font-family: var(--font-hand);
-  font-size: 1.82rem;
-  font-weight: 400;
+  font-size: 1.52rem;
+  font-weight: 500;
 }
 
 .calendar-month {
@@ -613,9 +610,9 @@ img {
 }
 
 .family-row b {
-  font-family: var(--font-hand);
-  font-size: 1.2rem;
-  font-weight: 400;
+  font-family: "Noto Serif KR", var(--font-serif);
+  font-size: 1.02rem;
+  font-weight: 500;
 }
 
 .wide-action,
@@ -683,9 +680,9 @@ img {
 .info-card strong {
   display: block;
   color: var(--mauve);
-  font-family: var(--font-hand);
-  font-size: 1.22rem;
-  font-weight: 400;
+  font-family: "Noto Serif KR", var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
   text-align: center;
 }
 
@@ -778,9 +775,7 @@ img {
 }
 
 .map-card-head strong {
-  font-family: var(--font-hand);
-  font-size: 1.18rem;
-  font-weight: 400;
+  font-size: 0.96rem;
 }
 
 .map-card-head span {
@@ -932,9 +927,7 @@ img {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.92);
   color: #26312d;
-  font-family: var(--font-hand);
-  font-size: 0.98rem;
-  font-weight: 400;
+  font-size: 0.78rem;
 }
 
 .naver-open {
@@ -1009,9 +1002,7 @@ img {
 .transport-card strong {
   display: block;
   margin-top: 2px;
-  font-family: var(--font-hand);
-  font-size: 1.14rem;
-  font-weight: 400;
+  font-size: 0.94rem;
 }
 
 .transport-card p {
@@ -1076,9 +1067,7 @@ img {
 }
 
 .account-card strong {
-  font-family: var(--font-hand);
-  font-size: 1.08rem;
-  font-weight: 400;
+  font-size: 0.9rem;
 }
 
 .account-card span {

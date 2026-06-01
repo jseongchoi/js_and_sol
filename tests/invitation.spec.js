@@ -39,6 +39,15 @@ test.describe("mobile wedding invitation", () => {
     );
   });
 
+  test("keeps the handwritten accent font scoped to large titles", async ({ page }) => {
+    await page.goto("/");
+
+    await expect(page.locator(".hero-copy h1")).toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
+    await expect(page.locator(".date-mark")).toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
+    await expect(page.locator(".section-head h2").first()).not.toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
+    await expect(page.locator(".info-card strong").first()).not.toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
+  });
+
   test("does not expose phone-number UI", async ({ page }) => {
     await page.goto("/");
 
