@@ -261,16 +261,56 @@ img {
 }
 
 .date-mark-section {
+  position: relative;
   display: grid;
   min-height: 520px;
   place-items: center;
+  overflow: hidden;
   background:
     radial-gradient(circle at 50% 16%, rgba(234, 216, 179, 0.2), transparent 32%),
     linear-gradient(180deg, #1a1518 0%, #5f455b 100%);
   color: rgba(255, 255, 255, 0.9);
 }
 
+.kinetic-panel,
+.kinetic-line {
+  position: absolute;
+  pointer-events: none;
+}
+
+.kinetic-panel {
+  width: 210px;
+  height: 146px;
+  border: 1px solid rgba(234, 216, 179, 0.28);
+  background: rgba(255, 253, 251, 0.035);
+  box-shadow: inset 0 0 42px rgba(234, 216, 179, 0.06);
+}
+
+.panel-one {
+  left: -74px;
+  top: 72px;
+  transform: translate3d(0, calc(var(--scroll-progress) * -62px), 0) rotate(-17deg);
+}
+
+.panel-two {
+  right: -70px;
+  bottom: 86px;
+  transform: translate3d(0, calc(var(--scroll-progress) * 76px), 0) rotate(14deg);
+}
+
+.kinetic-line {
+  left: 50%;
+  top: 0;
+  width: 1px;
+  height: 118%;
+  background: linear-gradient(180deg, transparent, rgba(234, 216, 179, 0.46), transparent);
+  transform: translateX(-50%) rotate(34deg);
+  opacity: 0.7;
+}
+
 .date-mark {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: 22px;
   text-align: center;
@@ -279,6 +319,35 @@ img {
   font-weight: 300;
   line-height: 0.86;
   letter-spacing: 0.02em;
+}
+
+.date-mark span {
+  display: block;
+  transform: translate3d(0, 0, 0);
+}
+
+.date-mark-year {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.date-mark-day {
+  color: var(--gold-soft);
+  transform: translate3d(calc(var(--scroll-progress) * -18px), 0, 0);
+}
+
+.date-mark-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 64px;
+  z-index: 1;
+  margin: 0;
+  color: rgba(234, 216, 179, 0.72);
+  font-family: var(--font-serif);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-align: center;
 }
 
 .section-block {
@@ -302,13 +371,19 @@ img {
   color: var(--mauve);
 }
 
-.letter-section p {
+.letter-lines {
+  display: grid;
+  gap: 8px;
   margin: 34px 0 0;
   color: var(--soft-ink);
   font-family: "Noto Serif KR", var(--font-serif);
   font-size: 0.96rem;
   line-height: 2.08;
   word-break: keep-all;
+}
+
+.letter-lines span {
+  display: block;
 }
 
 .couple-sign {
@@ -329,6 +404,7 @@ img {
 }
 
 .section-head p {
+  position: relative;
   margin: 0;
   color: var(--muted);
   font-family: var(--font-serif);
@@ -336,6 +412,26 @@ img {
   font-weight: 400;
   line-height: 1;
   text-transform: uppercase;
+}
+
+.section-head p::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 68px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transform: translateX(-50%) scaleX(0);
+  transition:
+    opacity 620ms ease 180ms,
+    transform 720ms ease 180ms;
+}
+
+.is-visible .section-head p::after {
+  opacity: 1;
+  transform: translateX(-50%) scaleX(1);
 }
 
 .section-head h2,

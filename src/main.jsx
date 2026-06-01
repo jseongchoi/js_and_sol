@@ -46,8 +46,6 @@ const wedding = {
     subway: "1호선 구로역 도보 약 5~7분 · 1/2호선 신도림역 도보 약 10분",
     parking: "지하주차장 600대, 외부주차장 200대 규모로 총 800여대 주차가 가능하며 하객 1시간 30분 무료 주차로 안내되어 있습니다.",
   },
-  message:
-    "서로의 계절을 천천히 지나온 두 사람이 이제 같은 방향을 바라보려 합니다. 이른 토요일의 빛 안에서, 가장 가까운 분들과 조용하고 선명한 시작을 나누고 싶습니다.",
   note: "격식은 가볍게, 마음은 깊게. 편안한 걸음으로 와 주세요.",
   rsvpUrl: "https://forms.gle/example-rsvp",
   accounts: [
@@ -73,6 +71,16 @@ const infoCards = [
     title: "화환 안내",
     text: "축하의 마음만 감사히 받겠습니다. 편안한 마음으로 참석해 주세요.",
   },
+];
+
+const invitationLines = [
+  "서로의 계절을 천천히 지나온",
+  "두 사람이",
+  "이제 같은 방향을",
+  "바라보려 합니다.",
+  "이른 토요일의 빛 안에서,",
+  "가장 가까운 분들과",
+  "조용하고 선명한 시작을 나누고 싶습니다.",
 ];
 
 const transportCards = [
@@ -265,11 +273,15 @@ function Hero({ onShare }) {
 
 function DateMark() {
   return (
-    <section className="date-mark-section" data-reveal aria-label="예식 날짜">
+    <section className="date-mark-section kinetic-section" data-reveal aria-label="예식 날짜">
+      <span className="kinetic-panel panel-one" aria-hidden="true" />
+      <span className="kinetic-panel panel-two" aria-hidden="true" />
+      <span className="kinetic-line" aria-hidden="true" />
       <div className="date-mark">
-        <span>{wedding.date.year}</span>
-        <span>{wedding.date.month}.{wedding.date.day}</span>
+        <span className="date-mark-year">{wedding.date.year}</span>
+        <span className="date-mark-day">{wedding.date.month}.{wedding.date.day}</span>
       </div>
+      <p className="date-mark-caption">JISUNG & SOL</p>
     </section>
   );
 }
@@ -278,7 +290,13 @@ function InvitationLetter() {
   return (
     <section className="letter-section" data-reveal>
       <Heart className="letter-heart" size={38} strokeWidth={1.3} />
-      <p>{wedding.message}</p>
+      <p className="letter-lines">
+        {invitationLines.map((line, index) => (
+          <span key={line} data-card data-card-index={index}>
+            {line}
+          </span>
+        ))}
+      </p>
       <div className="couple-sign">
         신랑 {wedding.groom.shortName} · 신부 {wedding.bride.shortName}
       </div>
