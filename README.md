@@ -50,15 +50,13 @@ npm run build
 
 ## 사진 교체
 
-현재는 사진이 들어갈 자리를 CSS 플레이스홀더로 만들었습니다. 실제 사진을 넣을 때는 `public/assets/` 폴더를 만들고 다음 파일명을 추천합니다.
+사진은 `public/assets/` 폴더에 PNG 파일로 넣습니다. 자세한 교체 방법과 갤러리 추가 방법은 [`PHOTO_GUIDE.md`](./PHOTO_GUIDE.md)를 참고하세요.
 
-- `public/assets/main.jpg`
-- `public/assets/gallery-1.jpg`
-- `public/assets/gallery-2.jpg`
-- `public/assets/gallery-3.jpg`
-- `public/assets/gallery-4.jpg`
+- `public/assets/wedding-hero.png`
+- `public/assets/gallery-detail.png`
+- `public/assets/gallery-venue.png`
 
-그 다음 `src/main.jsx`의 사진 플레이스홀더를 `<img src="./assets/main.jpg" />` 방식으로 바꾸면 됩니다.
+파일명을 그대로 유지해서 덮어쓰면 코드 수정 없이 사진만 교체할 수 있습니다.
 
 ## 포함 기능
 

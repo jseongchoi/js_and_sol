@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  CalendarPlus,
   Check,
   ChevronDown,
   ChevronLeft,
@@ -11,7 +10,6 @@ import {
   Heart,
   Images,
   MapPin,
-  Navigation,
   Share2,
   Sparkles,
   Train,
@@ -25,12 +23,12 @@ const wedding = {
   groom: {
     name: "최지성",
     shortName: "지성",
-    parents: "최도윤 · 이혜진의 아들",
+    parents: "최정재 · 신순채의 아들",
   },
   bride: {
     name: "이솔",
     shortName: "솔",
-    parents: "이재호 · 박민아의 딸",
+    parents: "이돈형 · 임혜경의 딸",
   },
   date: {
     year: "2026",
@@ -38,8 +36,6 @@ const wedding = {
     day: "17",
     weekday: "토요일",
     time: "오전 10시 40분",
-    isoStartUtc: "20261017T014000Z",
-    isoEndUtc: "20261017T034000Z",
     localIso: "2026-10-17T10:40:00+09:00",
   },
   venue: {
@@ -48,8 +44,7 @@ const wedding = {
     hall: "2F 링크홀",
     address: "서울특별시 구로구 경인로 610",
     subway: "1호선 구로역 도보 약 5~7분 · 1/2호선 신도림역 도보 약 10분",
-    shuttle: "신도림역 셔틀 운행 여부는 예식장 당일 안내 기준으로 확인해 주세요.",
-    parking: "주차 약 800대 가능으로 소개되어 있습니다.",
+    parking: "지하주차장 600대, 외부주차장 200대 규모로 총 800여대 주차가 가능하며 하객 1시간 30분 무료 주차로 안내되어 있습니다.",
   },
   message:
     "서로의 계절을 천천히 지나온 두 사람이 이제 같은 방향을 바라보려 합니다. 이른 토요일의 빛 안에서, 가장 가까운 분들과 조용하고 선명한 시작을 나누고 싶습니다.",
@@ -57,33 +52,27 @@ const wedding = {
   rsvpUrl: "https://forms.gle/example-rsvp",
   accounts: [
     { side: "groom", owner: "신랑 최지성", bank: "국민은행", number: "123456-01-234567" },
-    { side: "groom", owner: "혼주 최도윤", bank: "하나은행", number: "456-910123-45607" },
+    { side: "groom", owner: "혼주 최정재", bank: "하나은행", number: "456-910123-45607" },
     { side: "bride", owner: "신부 이솔", bank: "신한은행", number: "110-123-456789" },
-    { side: "bride", owner: "혼주 이재호", bank: "우리은행", number: "1002-234-567890" },
+    { side: "bride", owner: "혼주 이돈형", bank: "우리은행", number: "1002-234-567890" },
   ],
 };
 
-const calendarDays = Array.from({ length: 31 }, (_, index) => index + 1);
+const calendarDays = Array.from({ length: 17 }, (_, index) => index + 1);
 
 const infoCards = [
   {
-    title: "예식 안내",
-    text: "예식은 2F 링크홀에서 진행됩니다. 여유로운 인사를 위해 예식 20분 전 도착을 권합니다.",
+    title: "주차 안내",
+    text: wedding.venue.parking,
   },
   {
-    title: "식사 안내",
-    text: "예식 후 같은 건물 연회장에서 식사가 준비됩니다. 현장 안내에 따라 이동해 주세요.",
+    title: "삼성전자 배차 안내",
+    text: "출발 장소: 삼성전자 화성캠퍼스 H3\n출발 시간: 오전 9시 10분\n선탑자: 김수지",
   },
   {
     title: "화환 안내",
     text: "축하의 마음만 감사히 받겠습니다. 편안한 마음으로 참석해 주세요.",
   },
-];
-
-const timeline = [
-  { time: "10:00", title: "도착 및 인사", text: "로비 안내에 따라 2F 링크홀로 이동해 주세요." },
-  { time: "10:40", title: "예식 시작", text: "지성과 이솔의 첫 장면이 시작됩니다." },
-  { time: "11:20", title: "사진 촬영", text: "예식 직후 홀 앞에서 함께 기록을 남깁니다." },
 ];
 
 const transportCards = [
@@ -93,55 +82,38 @@ const transportCards = [
     title: "구로역 · 신도림역",
     text: wedding.venue.subway,
   },
-  {
-    icon: Navigation,
-    label: "Shuttle",
-    title: "셔틀 안내",
-    text: wedding.venue.shuttle,
-  },
-  {
-    icon: MapPin,
-    label: "Parking",
-    title: "주차 안내",
-    text: wedding.venue.parking,
-  },
 ];
 
+// 사진 교체/추가 방법은 PHOTO_GUIDE.md를 참고하세요.
+// 첫 번째 사진은 첫 화면 메인 사진과 갤러리 첫 장에 함께 사용됩니다.
 const galleryImages = [
   {
     src: asset("wedding-hero.png"),
     alt: "부케를 든 웨딩 무드 사진",
-    caption: "Together",
   },
   {
     src: asset("gallery-detail.png"),
     alt: "꽃과 리본이 놓인 웨딩 디테일 사진",
-    caption: "Details",
   },
   {
     src: asset("gallery-venue.png"),
     alt: "플라워 아치가 있는 웨딩홀 사진",
-    caption: "Ceremony",
   },
 ];
 
-const heroPetals = Array.from({ length: 12 }, (_, index) => index);
+const DAY_MS = 1000 * 60 * 60 * 24;
 
 function encodedVenueQuery() {
   return encodeURIComponent(`${wedding.venue.name} ${wedding.venue.address}`);
 }
 
-function googleCalendarUrl() {
-  const title = encodeURIComponent(`${wedding.groom.shortName} & ${wedding.bride.shortName} 결혼식`);
-  const details = encodeURIComponent(`${wedding.venue.name} ${wedding.venue.hall}`);
-  const location = encodeURIComponent(wedding.venue.address);
-
-  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${wedding.date.isoStartUtc}/${wedding.date.isoEndUtc}&details=${details}&location=${location}`;
+function mapEmbedUrl() {
+  return `https://www.google.com/maps?q=${encodedVenueQuery()}&z=16&hl=ko&output=embed`;
 }
 
 function getDday() {
   const target = new Date(wedding.date.localIso);
-  const diff = Math.ceil((target - new Date()) / (1000 * 60 * 60 * 24));
+  const diff = Math.ceil((target - new Date()) / DAY_MS);
   if (diff > 0) return `D-${diff}`;
   if (diff === 0) return "D-Day";
   return `D+${Math.abs(diff)}`;
@@ -150,7 +122,7 @@ function getDday() {
 function getCountdown() {
   const target = new Date(wedding.date.localIso).getTime();
   const diff = Math.max(0, target - Date.now());
-  const day = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const day = Math.floor(diff / DAY_MS);
   const hour = Math.floor((diff / (1000 * 60 * 60)) % 24);
   const minute = Math.floor((diff / (1000 * 60)) % 60);
   const second = Math.floor((diff / 1000) % 60);
@@ -201,7 +173,7 @@ function useCountdown() {
 
 function useReveal() {
   useEffect(() => {
-    const items = document.querySelectorAll("[data-reveal]");
+    const items = document.querySelectorAll("[data-reveal], [data-card]");
     if (!("IntersectionObserver" in window)) {
       items.forEach((item) => item.classList.add("is-visible"));
       return undefined;
@@ -219,7 +191,9 @@ function useReveal() {
     );
 
     items.forEach((item, index) => {
-      item.style.setProperty("--delay", `${Math.min(index * 36, 220)}ms`);
+      const cardIndex = Number(item.getAttribute("data-card-index") ?? index);
+      const delay = item.hasAttribute("data-card") ? Math.min(cardIndex * 80, 260) : Math.min(index * 36, 220);
+      item.style.setProperty("--delay", `${delay}ms`);
       observer.observe(item);
     });
 
@@ -261,17 +235,16 @@ function useScrollEffects() {
 function Hero({ onShare }) {
   return (
     <section id="intro" className="hero-section" data-reveal>
-      <img className="hero-photo" src={galleryImages[0].src} alt={galleryImages[0].alt} />
+      <img
+        className="hero-photo protected-photo"
+        src={galleryImages[0].src}
+        alt={galleryImages[0].alt}
+        draggable="false"
+        decoding="async"
+        fetchPriority="high"
+        data-protected-image
+      />
       <div className="hero-overlay" />
-      <div className="hero-petals" aria-hidden="true">
-        {heroPetals.map((item) => (
-          <span key={item} />
-        ))}
-      </div>
-      <div className="line-flower" aria-hidden="true">
-        <span />
-        <span />
-      </div>
       <div className="hero-copy">
         <p>We are getting married</p>
         <h1>
@@ -295,10 +268,7 @@ function DateMark() {
     <section className="date-mark-section" data-reveal aria-label="예식 날짜">
       <div className="date-mark">
         <span>{wedding.date.year}</span>
-        <span>
-          {wedding.date.month}
-          {wedding.date.day}
-        </span>
+        <span>{wedding.date.month}.{wedding.date.day}</span>
       </div>
     </section>
   );
@@ -339,18 +309,25 @@ function CountdownStrip() {
 
 function CalendarMonth() {
   return (
-    <div className="calendar-month" aria-label="2026년 10월 달력">
-      {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
-        <b key={day}>{day}</b>
-      ))}
-      {Array.from({ length: 4 }).map((_, index) => (
-        <i key={`blank-${index}`} aria-hidden="true" />
-      ))}
-      {calendarDays.map((day) => (
-        <span key={day} className={day === 17 ? "is-wedding-day" : ""}>
-          {day}
-        </span>
-      ))}
+    <div className="calendar-card" aria-label="2026년 10월 달력">
+      <div className="calendar-title">
+        <span>{wedding.date.year}</span>
+        <strong>{Number(wedding.date.month)}월</strong>
+      </div>
+      <div className="calendar-month">
+        {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
+          <b key={day}>{day}</b>
+        ))}
+        {Array.from({ length: 4 }).map((_, index) => (
+          <i key={`blank-${index}`} aria-hidden="true" />
+        ))}
+        {calendarDays.map((day) => (
+          <span key={day} className={day === 17 ? "is-wedding-day" : ""}>
+            {day === 17 && <Heart className="calendar-heart" size={35} fill="currentColor" strokeWidth={1.6} aria-hidden="true" />}
+            <em>{day}</em>
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
@@ -363,7 +340,7 @@ function WeddingDaySection() {
         <h2>
           {wedding.date.year}년 {Number(wedding.date.month)}월 {Number(wedding.date.day)}일 {wedding.date.weekday}
         </h2>
-        <span>{wedding.date.time} | {wedding.venue.displayName}</span>
+        <span>{wedding.date.time} | {wedding.venue.displayName} | {wedding.venue.hall}</span>
       </div>
       <CalendarMonth />
       <CountdownStrip />
@@ -404,21 +381,10 @@ function InformationSection() {
         <span>저희 웨딩에 대한 사전 안내를 드립니다.</span>
       </div>
       <div className="info-list">
-        {infoCards.map((item) => (
-          <article key={item.title} className="info-card">
+        {infoCards.map((item, index) => (
+          <article key={item.title} className="info-card" data-card data-card-index={index}>
             <strong>{item.title}</strong>
             <p>{item.text}</p>
-          </article>
-        ))}
-      </div>
-      <div className="timeline-list">
-        {timeline.map((item, index) => (
-          <article key={item.time} style={{ "--step": index }}>
-            <time>{item.time}</time>
-            <div>
-              <strong>{item.title}</strong>
-              <p>{item.text}</p>
-            </div>
           </article>
         ))}
       </div>
@@ -426,7 +392,7 @@ function InformationSection() {
   );
 }
 
-function GallerySection({ onOpen }) {
+function GallerySection({ onOpen, triggerRef }) {
   const [index, setIndex] = useState(0);
   const active = galleryImages[index];
 
@@ -438,12 +404,17 @@ function GallerySection({ onOpen }) {
     <section id="gallery" className="gallery-section section-block" data-reveal>
       <div className="section-head centered">
         <p>Gallery</p>
-        <h2>우리의 장면</h2>
-        <span>꽃과 빛, 공간의 온도를 차분히 담았습니다.</span>
       </div>
-      <button className="gallery-frame" type="button" onClick={() => onOpen(index)} aria-label={`${active.caption} 사진 크게 보기`}>
-        <img src={active.src} alt={active.alt} />
-        <span>{active.caption}</span>
+      <button
+        ref={triggerRef}
+        className="gallery-frame"
+        type="button"
+        onClick={() => onOpen(index)}
+        onContextMenu={(event) => event.preventDefault()}
+        aria-label="사진 크게 보기"
+        data-protected-image
+      >
+        <img className="protected-photo" src={active.src} alt={active.alt} draggable="false" loading="lazy" decoding="async" />
       </button>
       <div className="gallery-controls" aria-label="사진 넘기기">
         <button type="button" onClick={() => move(-1)} aria-label="이전 사진">
@@ -491,19 +462,21 @@ function TransportSection({ showToast }) {
         </span>
       </div>
 
-      <div className="map-card" aria-label="더링크호텔서울 위치 안내">
-        <svg className="route-svg" viewBox="0 0 320 220" aria-hidden="true">
-          <path className="road road-main" d="M22 56 C92 34, 150 114, 302 82" />
-          <path className="road road-sub" d="M-8 166 C80 112, 180 202, 332 128" />
-          <path className="road road-thin" d="M76 -8 L244 232" />
-          <path className="road road-thin" d="M-14 96 L332 196" />
-        </svg>
-        <span className="station station-a">구로역</span>
-        <span className="station station-b">신도림역</span>
-        <div className="map-pin">
-          <MapPin size={20} />
-          <span>VENUE</span>
+      <div className="map-card" aria-label="더링크호텔서울 위치 안내" data-card data-card-index="0">
+        <div className="map-card-head">
+          <MapPin size={18} />
+          <div>
+            <strong>{wedding.venue.displayName}</strong>
+            <span>{wedding.venue.hall}</span>
+          </div>
         </div>
+        <iframe
+          title="더링크호텔서울 지도"
+          src={mapEmbedUrl()}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          allowFullScreen
+        />
       </div>
 
       <div className="map-links">
@@ -516,8 +489,8 @@ function TransportSection({ showToast }) {
       </div>
 
       <div className="transport-list">
-        {transportCards.map(({ icon: Icon, label, title, text }) => (
-          <article key={label} className="transport-card">
+        {transportCards.map(({ icon: Icon, label, title, text }, index) => (
+          <article key={label} className="transport-card" data-card data-card-index={index + 1}>
             <Icon size={18} />
             <div>
               <span>{label}</span>
@@ -543,10 +516,6 @@ function TransportSection({ showToast }) {
           주소 복사
           <Copy size={15} />
         </button>
-        <a className="primary-action wide" href={googleCalendarUrl()} target="_blank" rel="noreferrer">
-          캘린더에 추가
-          <CalendarPlus size={16} />
-        </a>
       </div>
     </section>
   );
@@ -555,6 +524,18 @@ function TransportSection({ showToast }) {
 function GiftSection({ showToast }) {
   const [side, setSide] = useState("groom");
   const accounts = wedding.accounts.filter((account) => account.side === side);
+  const brideTabRef = useRef(null);
+  const groomTabRef = useRef(null);
+
+  function handleAccountTabKeyDown(event) {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    const nextSide = side === "groom" ? "bride" : "groom";
+    setSide(nextSide);
+    window.requestAnimationFrame(() => {
+      (nextSide === "groom" ? groomTabRef : brideTabRef).current?.focus();
+    });
+  }
 
   return (
     <section className="gift-section section-block" data-reveal>
@@ -563,17 +544,35 @@ function GiftSection({ showToast }) {
         <p>For Your Heart</p>
         <h2>마음 전하실 곳</h2>
       </div>
-      <div className="account-tabs" role="tablist" aria-label="계좌 구분">
-        <button type="button" className={side === "groom" ? "is-active" : ""} onClick={() => setSide("groom")}>
+      <div className="account-tabs" role="tablist" aria-label="계좌 구분" onKeyDown={handleAccountTabKeyDown}>
+        <button
+          id="account-tab-groom"
+          ref={groomTabRef}
+          type="button"
+          role="tab"
+          aria-selected={side === "groom"}
+          aria-controls="account-panel"
+          className={side === "groom" ? "is-active" : ""}
+          onClick={() => setSide("groom")}
+        >
           신랑측에게
         </button>
-        <button type="button" className={side === "bride" ? "is-active" : ""} onClick={() => setSide("bride")}>
+        <button
+          id="account-tab-bride"
+          ref={brideTabRef}
+          type="button"
+          role="tab"
+          aria-selected={side === "bride"}
+          aria-controls="account-panel"
+          className={side === "bride" ? "is-active" : ""}
+          onClick={() => setSide("bride")}
+        >
           신부측에게
         </button>
       </div>
-      <div className="account-list">
-        {accounts.map((account) => (
-          <article className="account-card" key={`${account.owner}-${account.number}`}>
+      <div id="account-panel" className="account-list" role="tabpanel" aria-labelledby={`account-tab-${side}`}>
+        {accounts.map((account, index) => (
+          <article className="account-card" key={`${account.owner}-${account.number}`} data-card data-card-index={index}>
             <div>
               <strong>{account.owner}</strong>
               <span>
@@ -621,9 +620,9 @@ function RsvpSection({ onShare }) {
   );
 }
 
-function FloatingDock({ onShare }) {
+function FloatingDock({ onShare, isHidden }) {
   return (
-    <nav className="floating-dock" aria-label="빠른 이동">
+    <nav className="floating-dock" aria-label="빠른 이동" aria-hidden={isHidden}>
       <a href="#route">
         <MapPin size={16} />
         지도
@@ -644,18 +643,49 @@ function FloatingDock({ onShare }) {
   );
 }
 
-function GalleryLightbox({ item, onClose }) {
+function GalleryLightbox({ item, onClose, returnFocusRef }) {
+  const closeButtonRef = useRef(null);
+
+  useEffect(() => {
+    if (item === null) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const focusTimer = window.setTimeout(() => {
+      closeButtonRef.current?.focus({ preventScroll: true });
+    }, 0);
+
+    function handleModalKeyDown(event) {
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      if (event.key === "Tab") {
+        event.preventDefault();
+        closeButtonRef.current?.focus();
+      }
+    }
+
+    window.addEventListener("keydown", handleModalKeyDown);
+    return () => {
+      window.clearTimeout(focusTimer);
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleModalKeyDown);
+      returnFocusRef?.current?.focus({ preventScroll: true });
+    };
+  }, [item, onClose, returnFocusRef]);
+
   if (item === null) return null;
   const active = galleryImages[item];
 
   return (
-    <div className="lightbox" role="dialog" aria-label="사진 크게 보기">
-      <div className="lightbox-panel">
-        <button type="button" className="lightbox-close" onClick={onClose} aria-label="닫기">
+    <div className="lightbox" role="dialog" aria-modal="true" aria-label="사진 크게 보기" onClick={onClose}>
+      <div className="lightbox-panel" onClick={(event) => event.stopPropagation()} onContextMenu={(event) => event.preventDefault()} data-protected-image>
+        <button ref={closeButtonRef} type="button" className="lightbox-close" onClick={onClose} aria-label="닫기">
           <X size={18} />
         </button>
-        <img className="lightbox-photo" src={active.src} alt={active.alt} />
-        <p>{active.caption}</p>
+        <img className="lightbox-photo protected-photo" src={active.src} alt={active.alt} draggable="false" decoding="async" />
       </div>
     </div>
   );
@@ -672,9 +702,29 @@ function Toast({ message }) {
 function App() {
   const [toast, showToast] = useToast();
   const [lightboxItem, setLightboxItem] = useState(null);
+  const galleryTriggerRef = useRef(null);
 
   useReveal();
   useScrollEffects();
+
+  useEffect(() => {
+    function preventProtectedImageAction(event) {
+      if (event.target instanceof Element && event.target.closest("[data-protected-image]")) {
+        event.preventDefault();
+      }
+    }
+
+    document.addEventListener("contextmenu", preventProtectedImageAction);
+    document.addEventListener("dragstart", preventProtectedImageAction);
+    return () => {
+      document.removeEventListener("contextmenu", preventProtectedImageAction);
+      document.removeEventListener("dragstart", preventProtectedImageAction);
+    };
+  }, []);
+
+  function closeLightbox() {
+    setLightboxItem(null);
+  }
 
   async function handleShare() {
     const shareData = {
@@ -702,25 +752,25 @@ function App() {
   return (
     <>
       <div className="scroll-progress" aria-hidden="true" />
-      <main className="app-shell">
+      <main className="app-shell" aria-hidden={lightboxItem !== null}>
         <Hero onShare={handleShare} />
         <DateMark />
         <InvitationLetter />
         <WeddingDaySection />
         <FamilySection />
         <InformationSection />
-        <GallerySection onOpen={setLightboxItem} />
+        <GallerySection onOpen={setLightboxItem} triggerRef={galleryTriggerRef} />
         <TransportSection showToast={showToast} />
         <GiftSection showToast={showToast} />
         <RsvpSection onShare={handleShare} />
       </main>
-      <FloatingDock onShare={handleShare} />
-      <footer className="site-footer">
+      <FloatingDock onShare={handleShare} isHidden={lightboxItem !== null} />
+      <footer className="site-footer" aria-hidden={lightboxItem !== null}>
         {wedding.groom.shortName} & {wedding.bride.shortName}
         <br />
         {wedding.date.year}.{wedding.date.month}.{wedding.date.day}
       </footer>
-      <GalleryLightbox item={lightboxItem} onClose={() => setLightboxItem(null)} />
+      <GalleryLightbox item={lightboxItem} onClose={closeLightbox} returnFocusRef={galleryTriggerRef} />
       <Toast message={toast} />
     </>
   );
