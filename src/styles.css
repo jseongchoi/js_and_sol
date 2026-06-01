@@ -1,10 +1,17 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Great+Vibes&family=Noto+Serif+KR:wght@400;500;700&display=swap");
 
+@font-face {
+  font-family: "Nanum NaMuJeongWeon";
+  src: url("./assets/nanum-namujeongweon-subset.woff2") format("woff2");
+  font-display: swap;
+}
+
 :root {
   --font-sans: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   --font-serif: "Cormorant Garamond", "Noto Serif KR", "Batang", serif;
   --font-script: "Great Vibes", "Cormorant Garamond", cursive;
+  --font-hand: "Nanum NaMuJeongWeon", "Noto Serif KR", "Apple SD Gothic Neo", serif;
   --ink: #262322;
   --soft-ink: #5e5759;
   --muted: #8d8388;
@@ -224,10 +231,10 @@ img {
   justify-content: center;
   gap: 10px;
   margin: 18px 0 0;
-  font-family: var(--font-serif);
-  font-size: 2.34rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-family: var(--font-hand);
+  font-size: 2.78rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   line-height: 1;
 }
 
@@ -314,9 +321,9 @@ img {
   display: grid;
   gap: 22px;
   text-align: center;
-  font-family: var(--font-serif);
+  font-family: var(--font-hand);
   font-size: clamp(4.4rem, 22vw, 6.8rem);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 0.86;
   letter-spacing: 0.02em;
 }
@@ -389,8 +396,10 @@ img {
 .couple-sign {
   margin-top: 34px;
   color: var(--ink);
-  font-size: 0.92rem;
-  letter-spacing: 0.03em;
+  font-family: var(--font-hand);
+  font-size: 1.18rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 .section-head {
@@ -438,8 +447,8 @@ img {
 .rsvp-section h2 {
   margin: 0;
   color: var(--ink);
-  font-family: "Noto Serif KR", var(--font-serif);
-  font-size: 1.05rem;
+  font-family: var(--font-hand);
+  font-size: 1.26rem;
   font-weight: 500;
   line-height: 1.5;
 }
@@ -479,8 +488,9 @@ img {
 }
 
 .calendar-title strong {
-  font-size: 1.52rem;
-  font-weight: 500;
+  font-family: var(--font-hand);
+  font-size: 1.82rem;
+  font-weight: 400;
 }
 
 .calendar-month {
@@ -603,9 +613,9 @@ img {
 }
 
 .family-row b {
-  font-family: "Noto Serif KR", var(--font-serif);
-  font-size: 1.02rem;
-  font-weight: 500;
+  font-family: var(--font-hand);
+  font-size: 1.2rem;
+  font-weight: 400;
 }
 
 .wide-action,
@@ -673,9 +683,9 @@ img {
 .info-card strong {
   display: block;
   color: var(--mauve);
-  font-family: "Noto Serif KR", var(--font-serif);
-  font-size: 1rem;
-  font-weight: 600;
+  font-family: var(--font-hand);
+  font-size: 1.22rem;
+  font-weight: 400;
   text-align: center;
 }
 
@@ -768,7 +778,9 @@ img {
 }
 
 .map-card-head strong {
-  font-size: 0.96rem;
+  font-family: var(--font-hand);
+  font-size: 1.18rem;
+  font-weight: 400;
 }
 
 .map-card-head span {
@@ -920,7 +932,9 @@ img {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.92);
   color: #26312d;
-  font-size: 0.78rem;
+  font-family: var(--font-hand);
+  font-size: 0.98rem;
+  font-weight: 400;
 }
 
 .naver-open {
@@ -995,7 +1009,9 @@ img {
 .transport-card strong {
   display: block;
   margin-top: 2px;
-  font-size: 0.94rem;
+  font-family: var(--font-hand);
+  font-size: 1.14rem;
+  font-weight: 400;
 }
 
 .transport-card p {
@@ -1060,7 +1076,9 @@ img {
 }
 
 .account-card strong {
-  font-size: 0.9rem;
+  font-family: var(--font-hand);
+  font-size: 1.08rem;
+  font-weight: 400;
 }
 
 .account-card span {
@@ -1216,7 +1234,7 @@ img {
   }
 
   .hero-copy h1 {
-    font-size: 2rem;
+    font-size: 2.28rem;
   }
 
   .map-links {

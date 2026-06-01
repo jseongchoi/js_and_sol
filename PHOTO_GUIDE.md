@@ -9,18 +9,18 @@
 | `public/assets/wedding-hero.png` | 첫 화면 메인 사진, 갤러리 1번째 사진 | 세로형 2:3 |
 | `public/assets/gallery-detail.png` | 갤러리 2번째 사진 | 가로형 4:3 |
 | `public/assets/gallery-venue.png` | 갤러리 3번째 사진 | 세로형 또는 가로형 |
-| `public/assets/og-image.png` | 카카오톡/문자/메신저 공유 썸네일 | 1200x630 |
+| `public/assets/share-preview.png` | 카카오톡/문자/메신저 공유 썸네일 | 1200x630 |
 
 첫 화면 사진은 `src/main.jsx`의 `galleryImages[0]`을 같이 사용합니다. 메인 사진만 바꾸고 싶어도 `wedding-hero.png`를 교체하면 됩니다.
 
-공유 썸네일은 `index.html`의 Open Graph 메타 태그에서 `og-image.png`를 사용합니다. 배포 주소가 바뀌면 `og:image`, `og:url`, `canonical` URL도 함께 바꿔주세요.
+공유 썸네일은 `index.html`의 Open Graph 메타 태그에서 `share-preview.png`를 사용합니다. 배포 주소가 바뀌면 `og:image`, `twitter:image`, `og:url`, `canonical` URL도 함께 바꿔주세요.
 
 ## 사진만 교체하는 방법
 
 1. 새 사진을 PNG로 준비합니다.
 2. 위 표의 파일명과 똑같이 이름을 바꿉니다.
 3. `public/assets/` 폴더에 덮어씁니다.
-4. 공유 썸네일도 바뀌어야 하면 `public/assets/og-image.png`를 새로 만듭니다.
+4. 공유 썸네일도 바뀌어야 하면 `public/assets/share-preview.png`를 새로 만듭니다.
 5. 개발 서버를 켜고 화면을 확인합니다.
 
 ```bash

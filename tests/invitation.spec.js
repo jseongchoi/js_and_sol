@@ -27,7 +27,15 @@ test.describe("mobile wedding invitation", () => {
     );
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
       "content",
-      "https://jseongchoi.github.io/js_and_sol/assets/og-image.png"
+      "https://jseongchoi.github.io/js_and_sol/assets/share-preview.png"
+    );
+    await expect(page.locator('link[rel="image_src"]')).toHaveAttribute(
+      "href",
+      "https://jseongchoi.github.io/js_and_sol/assets/share-preview.png"
+    );
+    await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
+      "content",
+      "https://jseongchoi.github.io/js_and_sol/assets/share-preview.png"
     );
   });
 
