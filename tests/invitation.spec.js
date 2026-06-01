@@ -58,6 +58,21 @@ test.describe("mobile wedding invitation", () => {
     await page.getByRole("tab", { name: "신부측에게" }).click();
     await expect(page.getByRole("tab", { name: "신부측에게" })).toHaveAttribute("aria-selected", "true");
     await expect(page.getByRole("tabpanel")).toContainText("신부 이솔");
+    await expect(page.getByRole("tabpanel").getByText("신부 이솔")).toBeVisible();
+    await page.getByRole("tab", { name: "신랑측에게" }).click();
+    await expect(page.getByRole("tabpanel").getByText("신랑 최지성")).toBeVisible();
+  });
+
+  test("uses Naver map as the default map surface", async ({ page }) => {
+    await page.goto("/");
+
+    await page.getByRole("link", { name: "지도", exact: true }).click();
+    await expect(page.getByText("NAVER MAP")).toBeVisible();
+    await expect(page.getByRole("link", { name: "네이버 지도에서 더링크호텔서울 보기" })).toHaveAttribute(
+      "href",
+      /map\.naver\.com/
+    );
+    await expect(page.locator(".map-card iframe")).toHaveCount(0);
   });
 
   test("keeps removed sections out of the page", async ({ page }) => {

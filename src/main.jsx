@@ -107,8 +107,8 @@ function encodedVenueQuery() {
   return encodeURIComponent(`${wedding.venue.name} ${wedding.venue.address}`);
 }
 
-function mapEmbedUrl() {
-  return `https://www.google.com/maps?q=${encodedVenueQuery()}&z=16&hl=ko&output=embed`;
+function naverMapUrl() {
+  return `https://map.naver.com/p/search/${encodedVenueQuery()}`;
 }
 
 function getDday() {
@@ -435,12 +435,12 @@ function TransportSection({ showToast }) {
   const mapLinks = useMemo(
     () => [
       {
-        label: "카카오맵",
-        href: `https://map.kakao.com/link/search/${encodedVenueQuery()}`,
+        label: "네이버",
+        href: naverMapUrl(),
       },
       {
-        label: "네이버",
-        href: `https://map.naver.com/p/search/${encodedVenueQuery()}`,
+        label: "카카오맵",
+        href: `https://map.kakao.com/link/search/${encodedVenueQuery()}`,
       },
       {
         label: "구글맵",
@@ -470,13 +470,23 @@ function TransportSection({ showToast }) {
             <span>{wedding.venue.hall}</span>
           </div>
         </div>
-        <iframe
-          title="더링크호텔서울 지도"
-          src={mapEmbedUrl()}
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          allowFullScreen
-        />
+        <a className="naver-map-preview" href={naverMapUrl()} target="_blank" rel="noreferrer" aria-label="네이버 지도에서 더링크호텔서울 보기">
+          <span className="naver-map-badge">NAVER MAP</span>
+          <span className="naver-road road-a" />
+          <span className="naver-road road-b" />
+          <span className="naver-road road-c" />
+          <span className="naver-subway">1</span>
+          <span className="naver-place station-guro">구로역</span>
+          <span className="naver-place station-sindorim">신도림역</span>
+          <span className="naver-pin">
+            <MapPin size={20} fill="currentColor" />
+            <strong>{wedding.venue.displayName}</strong>
+          </span>
+          <span className="naver-open">
+            네이버 지도에서 보기
+            <ExternalLink size={14} />
+          </span>
+        </a>
       </div>
 
       <div className="map-links">
@@ -572,7 +582,7 @@ function GiftSection({ showToast }) {
       </div>
       <div id="account-panel" className="account-list" role="tabpanel" aria-labelledby={`account-tab-${side}`}>
         {accounts.map((account, index) => (
-          <article className="account-card" key={`${account.owner}-${account.number}`} data-card data-card-index={index}>
+          <article className="account-card is-visible" key={`${account.owner}-${account.number}`}>
             <div>
               <strong>{account.owner}</strong>
               <span>
