@@ -63,6 +63,11 @@ test.describe("mobile wedding invitation", () => {
     const dialog = page.getByRole("dialog", { name: "사진 크게 보기" });
     await expect(dialog).toBeVisible();
     await expect(dialog.locator("img.lightbox-photo")).toBeVisible();
+    await expect(dialog.locator(".lightbox-count")).toHaveText("1 / 3");
+    await dialog.locator(".lightbox-next").click();
+    await expect(dialog.locator(".lightbox-count")).toHaveText("2 / 3");
+    await page.keyboard.press("ArrowLeft");
+    await expect(dialog.locator(".lightbox-count")).toHaveText("1 / 3");
 
     await page.keyboard.press("Escape");
     await expect(dialog).toHaveCount(0);

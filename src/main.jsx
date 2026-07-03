@@ -10,20 +10,25 @@ import {
   Heart,
   Images,
   MapPin,
+  MessageCircle,
   Share2,
   Sparkles,
   Train,
+  Trash2,
   X,
 } from "lucide-react";
 import "./styles.css";
 
 const asset = (name) => `${import.meta.env.BASE_URL}assets/${name}`;
+const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL ?? "").replace(/\/$/, "");
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY ?? "";
+const isGuestbookEnabled = Boolean(supabaseUrl && supabaseAnonKey);
 
 const wedding = {
   groom: {
     name: "최지성",
     shortName: "지성",
-    parents: "최정재 · 신순채의 아들",
+    parents: "故 최정재 · 신순채의 아들",
   },
   bride: {
     name: "이솔",
@@ -153,6 +158,75 @@ async function copySafeText(text, done, fail) {
   }
 }
 
+async function supabaseRequest(path, options = {}) {
+  if (!isGuestbookEnabled) throw new Error("Guestbook is not configured.");
+
+  const response = await fetch(`${supabaseUrl}${path}`, {
+    ...options,
+    headers: {
+      apikey: supabaseAnonKey,
+      Authorization: `Bearer ${supabaseAnonKey}`,
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(await response.text());
+  }
+
+  if (response.status === 204) return null;
+
+  const text = await response.text();
+  return text ? JSON.parse(text) : null;
+}
+
+function listGuestbookEntries() {
+  return supabaseRequest("/rest/v1/rpc/list_guestbook_entries", {
+    method: "POST",
+    body: "{}",
+  });
+}
+
+function createGuestbookEntry({ name, password, message }) {
+  return supabaseRequest("/rest/v1/guestbook_entries", {
+    method: "POST",
+    headers: {
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({
+      name,
+      message,
+      entry_password: password,
+    }),
+  });
+}
+
+function deleteGuestbookEntry(id, password) {
+  return supabaseRequest("/rest/v1/rpc/delete_guestbook_entry", {
+    method: "POST",
+    body: JSON.stringify({
+      entry_id: id,
+      input_password: password,
+    }),
+  });
+}
+
+const guestbookDateFormatter = new Intl.DateTimeFormat("ko-KR", {
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
+function formatGuestbookDate(value) {
+  try {
+    return guestbookDateFormatter.format(new Date(value));
+  } catch {
+    return "";
+  }
+}
+
 function useToast() {
   const [message, setMessage] = useState("");
   const timerRef = useRef(0);
@@ -252,6 +326,7 @@ function Hero({ onShare }) {
         fetchPriority="high"
         data-protected-image
       />
+      <span className="photo-guard" aria-hidden="true" data-protected-image />
       <div className="hero-overlay" />
       <div className="hero-copy">
         <p>We are getting married</p>
@@ -411,39 +486,27 @@ function InformationSection() {
 }
 
 function GallerySection({ onOpen, triggerRef }) {
-  const [index, setIndex] = useState(0);
-  const active = galleryImages[index];
-
-  function move(step) {
-    setIndex((current) => (current + step + galleryImages.length) % galleryImages.length);
-  }
-
   return (
     <section id="gallery" className="gallery-section section-block" data-reveal>
       <div className="section-head centered">
         <p>Gallery</p>
       </div>
-      <button
-        ref={triggerRef}
-        className="gallery-frame"
-        type="button"
-        onClick={() => onOpen(index)}
-        onContextMenu={(event) => event.preventDefault()}
-        aria-label="사진 크게 보기"
-        data-protected-image
-      >
-        <img className="protected-photo" src={active.src} alt={active.alt} draggable="false" loading="lazy" decoding="async" />
-      </button>
-      <div className="gallery-controls" aria-label="사진 넘기기">
-        <button type="button" onClick={() => move(-1)} aria-label="이전 사진">
-          <ChevronLeft size={22} />
-        </button>
-        <strong>
-          {index + 1} / {galleryImages.length}
-        </strong>
-        <button type="button" onClick={() => move(1)} aria-label="다음 사진">
-          <ChevronRight size={22} />
-        </button>
+      <div className="gallery-grid" aria-label="사진 모음">
+        {galleryImages.map((image, index) => (
+          <button
+            ref={index === 0 ? triggerRef : null}
+            className="gallery-tile"
+            type="button"
+            key={image.src}
+            onClick={() => onOpen(index)}
+            onContextMenu={(event) => event.preventDefault()}
+            aria-label={index === 0 ? "사진 크게 보기" : `사진 ${index + 1} 크게 보기`}
+            data-protected-image
+          >
+            <img className="protected-photo" src={image.src} alt={image.alt} draggable="false" loading="lazy" decoding="async" />
+            <span className="photo-guard" aria-hidden="true" data-protected-image />
+          </button>
+        ))}
       </div>
     </section>
   );
@@ -628,6 +691,180 @@ function GiftSection({ showToast }) {
   );
 }
 
+function GuestbookSection({ showToast }) {
+  const [entries, setEntries] = useState([]);
+  const [form, setForm] = useState({ name: "", password: "", message: "" });
+  const [deleteDraft, setDeleteDraft] = useState({ id: null, password: "" });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  async function loadEntries() {
+    if (!isGuestbookEnabled) return;
+
+    setIsLoading(true);
+    try {
+      setEntries((await listGuestbookEntries()) ?? []);
+    } catch {
+      showToast("축하 메시지를 불러오지 못했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadEntries();
+  }, []);
+
+  if (!isGuestbookEnabled) return null;
+
+  function updateForm(field, value) {
+    setForm((current) => ({ ...current, [field]: value }));
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    const nextEntry = {
+      name: form.name.trim(),
+      password: form.password.trim(),
+      message: form.message.trim(),
+    };
+
+    if (!nextEntry.name || !nextEntry.password || !nextEntry.message) {
+      showToast("이름, 암호, 메시지를 모두 입력해주세요.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await createGuestbookEntry(nextEntry);
+      setForm({ name: "", password: "", message: "" });
+      await loadEntries();
+      showToast("축하 메시지를 남겼습니다.");
+    } catch {
+      showToast("메시지를 남기지 못했습니다.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  async function handleDelete(event) {
+    event.preventDefault();
+
+    const password = deleteDraft.password.trim();
+    if (!deleteDraft.id || !password) {
+      showToast("암호를 입력해주세요.");
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      const deleted = await deleteGuestbookEntry(deleteDraft.id, password);
+      if (!deleted) {
+        showToast("암호가 맞지 않습니다.");
+        return;
+      }
+
+      setDeleteDraft({ id: null, password: "" });
+      await loadEntries();
+      showToast("메시지를 삭제했습니다.");
+    } catch {
+      showToast("메시지를 삭제하지 못했습니다.");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
+  return (
+    <section className="guestbook-section section-block lavender-block" data-reveal>
+      <div className="section-head centered">
+        <p>Guest Book</p>
+        <h2>축하 메시지</h2>
+      </div>
+
+      <form className="guestbook-form" onSubmit={handleSubmit}>
+        <div className="guestbook-fields">
+          <label>
+            <span>이름</span>
+            <input
+              type="text"
+              value={form.name}
+              maxLength={20}
+              autoComplete="name"
+              onChange={(event) => updateForm("name", event.target.value)}
+            />
+          </label>
+          <label>
+            <span>암호</span>
+            <input
+              type="password"
+              value={form.password}
+              maxLength={30}
+              autoComplete="new-password"
+              onChange={(event) => updateForm("password", event.target.value)}
+            />
+          </label>
+        </div>
+        <label>
+          <span>메시지</span>
+          <textarea
+            value={form.message}
+            maxLength={300}
+            rows={4}
+            onChange={(event) => updateForm("message", event.target.value)}
+          />
+        </label>
+        <button className="primary-action wide" type="submit" disabled={isSubmitting}>
+          남기기
+          <MessageCircle size={16} />
+        </button>
+      </form>
+
+      <div className="guestbook-list" aria-live="polite">
+        {isLoading && <p className="guestbook-empty">불러오는 중입니다.</p>}
+        {!isLoading && entries.length === 0 && <p className="guestbook-empty">아직 남겨진 메시지가 없습니다.</p>}
+        {!isLoading &&
+          entries.map((entry) => (
+            <article className="guestbook-card" key={entry.id}>
+              <div className="guestbook-card-head">
+                <strong>{entry.name}</strong>
+                <span>{formatGuestbookDate(entry.created_at)}</span>
+                <button
+                  type="button"
+                  className="guestbook-delete"
+                  aria-label={`${entry.name} 메시지 삭제`}
+                  onClick={() => setDeleteDraft({ id: entry.id, password: "" })}
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+              <p>{entry.message}</p>
+              {deleteDraft.id === entry.id && (
+                <form className="guestbook-delete-form" onSubmit={handleDelete}>
+                  <input
+                    type="password"
+                    value={deleteDraft.password}
+                    maxLength={30}
+                    autoComplete="current-password"
+                    placeholder="암호"
+                    onChange={(event) => setDeleteDraft((current) => ({ ...current, password: event.target.value }))}
+                  />
+                  <button type="submit" disabled={isDeleting}>
+                    삭제
+                  </button>
+                  <button type="button" onClick={() => setDeleteDraft({ id: null, password: "" })}>
+                    취소
+                  </button>
+                </form>
+              )}
+            </article>
+          ))}
+      </div>
+    </section>
+  );
+}
+
 function RsvpSection({ onShare }) {
   return (
     <section id="rsvp" className="rsvp-section section-block lavender-block" data-reveal>
@@ -671,11 +908,14 @@ function FloatingDock({ onShare, isHidden }) {
   );
 }
 
-function GalleryLightbox({ item, onClose, returnFocusRef }) {
+function GalleryLightbox({ item, onClose, onMove, returnFocusRef }) {
   const closeButtonRef = useRef(null);
+  const previousButtonRef = useRef(null);
+  const nextButtonRef = useRef(null);
+  const isOpen = item !== null;
 
   useEffect(() => {
-    if (item === null) return undefined;
+    if (!isOpen) return undefined;
 
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -689,9 +929,26 @@ function GalleryLightbox({ item, onClose, returnFocusRef }) {
         return;
       }
 
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        onMove(-1);
+        return;
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        onMove(1);
+        return;
+      }
+
       if (event.key === "Tab") {
         event.preventDefault();
-        closeButtonRef.current?.focus();
+        const focusableButtons = [closeButtonRef.current, previousButtonRef.current, nextButtonRef.current].filter(Boolean);
+        const currentIndex = focusableButtons.indexOf(document.activeElement);
+        const nextIndex = event.shiftKey
+          ? (currentIndex - 1 + focusableButtons.length) % focusableButtons.length
+          : (currentIndex + 1) % focusableButtons.length;
+        focusableButtons[nextIndex]?.focus();
       }
     }
 
@@ -702,7 +959,7 @@ function GalleryLightbox({ item, onClose, returnFocusRef }) {
       window.removeEventListener("keydown", handleModalKeyDown);
       returnFocusRef?.current?.focus({ preventScroll: true });
     };
-  }, [item, onClose, returnFocusRef]);
+  }, [isOpen]);
 
   if (item === null) return null;
   const active = galleryImages[item];
@@ -713,7 +970,17 @@ function GalleryLightbox({ item, onClose, returnFocusRef }) {
         <button ref={closeButtonRef} type="button" className="lightbox-close" onClick={onClose} aria-label="닫기">
           <X size={18} />
         </button>
+        <button ref={previousButtonRef} type="button" className="lightbox-nav lightbox-prev" onClick={() => onMove(-1)} aria-label="이전 사진">
+          <ChevronLeft size={22} />
+        </button>
         <img className="lightbox-photo protected-photo" src={active.src} alt={active.alt} draggable="false" decoding="async" />
+        <span className="photo-guard" aria-hidden="true" data-protected-image />
+        <button ref={nextButtonRef} type="button" className="lightbox-nav lightbox-next" onClick={() => onMove(1)} aria-label="다음 사진">
+          <ChevronRight size={22} />
+        </button>
+        <span className="lightbox-count" aria-live="polite">
+          {item + 1} / {galleryImages.length}
+        </span>
       </div>
     </div>
   );
@@ -742,16 +1009,26 @@ function App() {
       }
     }
 
-    document.addEventListener("contextmenu", preventProtectedImageAction);
-    document.addEventListener("dragstart", preventProtectedImageAction);
+    const blockedEvents = ["contextmenu", "dragstart", "selectstart", "copy"];
+    blockedEvents.forEach((eventName) => {
+      document.addEventListener(eventName, preventProtectedImageAction);
+    });
     return () => {
-      document.removeEventListener("contextmenu", preventProtectedImageAction);
-      document.removeEventListener("dragstart", preventProtectedImageAction);
+      blockedEvents.forEach((eventName) => {
+        document.removeEventListener(eventName, preventProtectedImageAction);
+      });
     };
   }, []);
 
   function closeLightbox() {
     setLightboxItem(null);
+  }
+
+  function moveLightbox(step) {
+    setLightboxItem((current) => {
+      if (current === null) return null;
+      return (current + step + galleryImages.length) % galleryImages.length;
+    });
   }
 
   async function handleShare() {
@@ -790,6 +1067,7 @@ function App() {
         <GallerySection onOpen={setLightboxItem} triggerRef={galleryTriggerRef} />
         <TransportSection showToast={showToast} />
         <GiftSection showToast={showToast} />
+        <GuestbookSection showToast={showToast} />
         <RsvpSection onShare={handleShare} />
       </main>
       <FloatingDock onShare={handleShare} isHidden={lightboxItem !== null} />
@@ -798,7 +1076,7 @@ function App() {
         <br />
         {wedding.date.year}.{wedding.date.month}.{wedding.date.day}
       </footer>
-      <GalleryLightbox item={lightboxItem} onClose={closeLightbox} returnFocusRef={galleryTriggerRef} />
+      <GalleryLightbox item={lightboxItem} onClose={closeLightbox} onMove={moveLightbox} returnFocusRef={galleryTriggerRef} />
       <Toast message={toast} />
     </>
   );
