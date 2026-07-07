@@ -348,9 +348,9 @@ function Hero({ onShare }) {
       <div className="hero-copy">
         <p>We are getting married</p>
         <h1>
-          {wedding.groom.shortName}
-          <span>&</span>
-          {wedding.bride.shortName}
+          <span className="hero-name">{wedding.groom.shortName}</span>
+          <span className="hero-amp">&</span>
+          <span className="hero-name">{wedding.bride.shortName}</span>
         </h1>
         <strong>
           {wedding.date.year}. {wedding.date.month}. {wedding.date.day} {wedding.date.weekday}
@@ -484,7 +484,7 @@ function FamilySection() {
 
 function InformationSection() {
   return (
-    <section className="information-section section-block lavender-block" data-reveal>
+    <section id="information" className="information-section section-block lavender-block" data-reveal>
       <div className="section-head centered">
         <p>Information</p>
         <h2>안내사항</h2>
@@ -989,9 +989,9 @@ function FloatingDock({ onShare, isHidden }) {
         <Images size={16} />
         사진
       </a>
-      <a href="#rsvp">
+      <a href="#information">
         <Check size={16} />
-        RSVP
+        INFO
       </a>
       <button type="button" onClick={onShare}>
         <Share2 size={16} />

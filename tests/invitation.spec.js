@@ -110,7 +110,7 @@ test.describe("mobile wedding invitation", () => {
   test("shows an inline RSVP form", async ({ page }) => {
     await page.goto("/");
 
-    await page.getByRole("link", { name: "RSVP" }).click();
+    await page.locator("#rsvp").scrollIntoViewIfNeeded();
     await expect(page.getByRole("heading", { name: "참석 의사를 남겨주세요" })).toBeVisible();
     await expect(page.getByLabel("이름")).toBeVisible();
     await expect(page.getByRole("button", { name: "참석" })).toHaveClass(/is-active/);
@@ -126,6 +126,7 @@ test.describe("mobile wedding invitation", () => {
     const infoHeading = page.getByRole("heading", { name: "안내사항" });
     const giftHeading = page.getByRole("heading", { name: "마음 전하실 곳" });
 
+    await expect(page.getByRole("link", { name: "INFO" })).toHaveAttribute("href", "#information");
     await expect(infoHeading).toBeVisible();
     await expect(giftHeading).toBeVisible();
     await expect(
