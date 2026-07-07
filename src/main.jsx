@@ -9,6 +9,7 @@ import {
   ExternalLink,
   Heart,
   Images,
+  Info,
   MapPin,
   MessageCircle,
   Share2,
@@ -990,7 +991,7 @@ function FloatingDock({ onShare, isHidden }) {
         사진
       </a>
       <a href="#information">
-        <Check size={16} />
+        <Info size={16} />
         INFO
       </a>
       <button type="button" onClick={onShare}>
