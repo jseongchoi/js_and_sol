@@ -21,8 +21,8 @@ import "./styles.css";
 
 const asset = (name) => `${import.meta.env.BASE_URL}assets/${name}`;
 const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL ?? "").replace(/\/$/, "");
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY ?? "";
-const isGuestbookEnabled = Boolean(supabaseUrl && supabaseAnonKey);
+const supabaseApiKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? import.meta.env.VITE_SUPABASE_ANON_KEY ?? "";
+const isGuestbookEnabled = Boolean(supabaseUrl && supabaseApiKey);
 
 const wedding = {
   groom: {
@@ -161,14 +161,19 @@ async function copySafeText(text, done, fail) {
 async function supabaseRequest(path, options = {}) {
   if (!isGuestbookEnabled) throw new Error("Guestbook is not configured.");
 
+  const headers = {
+    apikey: supabaseApiKey,
+    "Content-Type": "application/json",
+    ...options.headers,
+  };
+
+  if (!supabaseApiKey.startsWith("sb_publishable_")) {
+    headers.Authorization = `Bearer ${supabaseApiKey}`;
+  }
+
   const response = await fetch(`${supabaseUrl}${path}`, {
     ...options,
-    headers: {
-      apikey: supabaseAnonKey,
-      Authorization: `Bearer ${supabaseAnonKey}`,
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
+    headers,
   });
 
   if (!response.ok) {
