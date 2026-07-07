@@ -97,6 +97,18 @@ test.describe("mobile wedding invitation", () => {
     await expect(page.locator(".map-card iframe")).toHaveCount(0);
   });
 
+  test("shows an inline RSVP form", async ({ page }) => {
+    await page.goto("/");
+
+    await page.getByRole("link", { name: "RSVP" }).click();
+    await expect(page.getByRole("heading", { name: "참석 의사를 남겨주세요" })).toBeVisible();
+    await expect(page.getByLabel("이름")).toBeVisible();
+    await expect(page.getByRole("button", { name: "참석" })).toHaveClass(/is-active/);
+    await page.getByRole("button", { name: "불참" }).click();
+    await expect(page.getByRole("button", { name: "불참" })).toHaveClass(/is-active/);
+    await expect(page.locator('a[href*="forms.gle"]')).toHaveCount(0);
+  });
+
   test("keeps removed sections out of the page", async ({ page }) => {
     await page.goto("/");
 

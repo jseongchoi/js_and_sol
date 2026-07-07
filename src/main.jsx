@@ -53,7 +53,6 @@ const wedding = {
     parking: "지하주차장 600대, 외부주차장 200대 규모로 총 800여대 주차가 가능하며 하객 1시간 30분 무료 주차로 안내되어 있습니다.",
   },
   note: "격식은 가볍게, 마음은 깊게. 편안한 걸음으로 와 주세요.",
-  rsvpUrl: "https://forms.gle/example-rsvp",
   accounts: [
     { side: "groom", owner: "신랑 최지성", bank: "국민은행", number: "123456-01-234567" },
     { side: "groom", owner: "혼주 최정재", bank: "하나은행", number: "456-910123-45607" },
@@ -207,6 +206,19 @@ function createGuestbookEntry({ name, password, message }) {
       name,
       message,
       entry_password: password,
+    }),
+  });
+}
+
+function createRsvpResponse({ name, attending }) {
+  return supabaseRequest("/rest/v1/rsvp_responses", {
+    method: "POST",
+    headers: {
+      Prefer: "return=minimal",
+    },
+    body: JSON.stringify({
+      name,
+      attending,
     }),
   });
 }
@@ -892,17 +904,72 @@ function GuestbookSection({ showToast }) {
   );
 }
 
-function RsvpSection({ onShare }) {
+function RsvpSection({ onShare, showToast }) {
+  const [name, setName] = useState("");
+  const [attending, setAttending] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    const nextName = name.trim();
+    if (!nextName) {
+      showToast("이름을 입력해주세요.");
+      return;
+    }
+
+    if (!isGuestbookEnabled) {
+      showToast("참석 의사 기능을 준비 중입니다.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await createRsvpResponse({ name: nextName, attending });
+      setName("");
+      setAttending(true);
+      showToast("참석 의사를 남겼습니다.");
+    } catch {
+      showToast("참석 의사를 남기지 못했습니다.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <section id="rsvp" className="rsvp-section section-block lavender-block" data-reveal>
       <Sparkles size={22} />
-      <h2>함께해 주신다면 큰 기쁨입니다</h2>
+      <h2>참석 의사를 남겨주세요</h2>
       <p>{wedding.note}</p>
-      <div className="button-grid">
-        <a className="primary-action wide" href={wedding.rsvpUrl} target="_blank" rel="noreferrer">
-          참석 의사 남기기
+
+      <form className="rsvp-form" onSubmit={handleSubmit}>
+        <label>
+          <span>이름</span>
+          <input
+            type="text"
+            value={name}
+            maxLength={20}
+            autoComplete="name"
+            onChange={(event) => setName(event.target.value)}
+          />
+        </label>
+
+        <div className="rsvp-choice" role="group" aria-label="참석 의사">
+          <button type="button" className={attending ? "is-active" : ""} onClick={() => setAttending(true)}>
+            참석
+          </button>
+          <button type="button" className={!attending ? "is-active" : ""} onClick={() => setAttending(false)}>
+            불참
+          </button>
+        </div>
+
+        <button className="primary-action wide" type="submit" disabled={isSubmitting}>
+          의사 남기기
           <Check size={16} />
-        </a>
+        </button>
+      </form>
+
+      <div className="button-grid">
         <button className="ghost-action wide" type="button" onClick={onShare}>
           청첩장 공유하기
           <Share2 size={16} />
@@ -1095,7 +1162,7 @@ function App() {
         <TransportSection showToast={showToast} />
         <GiftSection showToast={showToast} />
         <GuestbookSection showToast={showToast} />
-        <RsvpSection onShare={handleShare} />
+        <RsvpSection onShare={handleShare} showToast={showToast} />
       </main>
       <FloatingDock onShare={handleShare} isHidden={lightboxItem !== null} />
       <footer className="site-footer" aria-hidden={lightboxItem !== null}>
