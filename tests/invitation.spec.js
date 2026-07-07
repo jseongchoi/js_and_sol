@@ -27,15 +27,15 @@ test.describe("mobile wedding invitation", () => {
     );
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
       "content",
-      "https://jseongchoi.github.io/js_and_sol/assets/share-preview.png"
+      "https://jseongchoi.github.io/js_and_sol/assets/share-preview-card.png"
     );
     await expect(page.locator('link[rel="image_src"]')).toHaveAttribute(
       "href",
-      "https://jseongchoi.github.io/js_and_sol/assets/share-preview.png"
+      "https://jseongchoi.github.io/js_and_sol/assets/share-preview-card.png"
     );
     await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
       "content",
-      "https://jseongchoi.github.io/js_and_sol/assets/share-preview.png"
+      "https://jseongchoi.github.io/js_and_sol/assets/share-preview-card.png"
     );
   });
 
@@ -43,7 +43,7 @@ test.describe("mobile wedding invitation", () => {
     await page.goto("/");
 
     await expect(page.locator(".hero-copy h1")).toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
-    await expect(page.locator(".date-mark")).toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
+    await expect(page.locator(".save-date-title")).toHaveCSS("font-family", /Great Vibes/);
     await expect(page.locator(".section-head h2").first()).not.toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
     await expect(page.locator(".info-card strong").first()).not.toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
   });
@@ -63,11 +63,11 @@ test.describe("mobile wedding invitation", () => {
     const dialog = page.getByRole("dialog", { name: "사진 크게 보기" });
     await expect(dialog).toBeVisible();
     await expect(dialog.locator("img.lightbox-photo")).toBeVisible();
-    await expect(dialog.locator(".lightbox-count")).toHaveText("1 / 3");
+    await expect(dialog.locator(".lightbox-count")).toHaveText("1 / 16");
     await dialog.locator(".lightbox-next").click();
-    await expect(dialog.locator(".lightbox-count")).toHaveText("2 / 3");
+    await expect(dialog.locator(".lightbox-count")).toHaveText("2 / 16");
     await page.keyboard.press("ArrowLeft");
-    await expect(dialog.locator(".lightbox-count")).toHaveText("1 / 3");
+    await expect(dialog.locator(".lightbox-count")).toHaveText("1 / 16");
 
     await page.keyboard.press("Escape");
     await expect(dialog).toHaveCount(0);
@@ -80,9 +80,12 @@ test.describe("mobile wedding invitation", () => {
     await page.getByRole("tab", { name: "신부측에게" }).click();
     await expect(page.getByRole("tab", { name: "신부측에게" })).toHaveAttribute("aria-selected", "true");
     await expect(page.getByRole("tabpanel")).toContainText("신부 이솔");
+    await expect(page.getByRole("tabpanel")).toContainText("혼주 이돈형");
+    await expect(page.getByRole("tabpanel")).toContainText("혼주 임혜경");
     await expect(page.getByRole("tabpanel").getByText("신부 이솔")).toBeVisible();
     await page.getByRole("tab", { name: "신랑측에게" }).click();
     await expect(page.getByRole("tabpanel").getByText("신랑 최지성")).toBeVisible();
+    await expect(page.getByRole("tabpanel").getByText("혼주 신순채")).toBeVisible();
   });
 
   test("uses the updated family, information, and gift wording", async ({ page }) => {
@@ -110,13 +113,44 @@ test.describe("mobile wedding invitation", () => {
   test("shows an inline RSVP form", async ({ page }) => {
     await page.goto("/");
 
-    await page.locator("#rsvp").scrollIntoViewIfNeeded();
-    await expect(page.getByRole("heading", { name: "참석 의사를 남겨주세요" })).toBeVisible();
-    await expect(page.getByLabel("이름")).toBeVisible();
-    await expect(page.getByRole("button", { name: "참석" })).toHaveClass(/is-active/);
-    await page.getByRole("button", { name: "불참" }).click();
-    await expect(page.getByRole("button", { name: "불참" })).toHaveClass(/is-active/);
+    const rsvp = page.locator("#rsvp");
+    await rsvp.scrollIntoViewIfNeeded();
+    await expect(rsvp.locator(".section-head p")).toHaveText("Attendance");
+    await expect(rsvp.getByRole("heading", { name: "참석 의사를 남겨주세요" })).toBeVisible();
+    await expect(rsvp.locator(".section-head span")).toContainText("격식은 가볍게, 마음은 깊게.");
+    await expect(rsvp.getByLabel("이름")).toBeVisible();
+    await expect(rsvp.getByRole("button", { name: "참석" })).toHaveClass(/is-active/);
+    await rsvp.getByRole("button", { name: "불참" }).click();
+    await expect(rsvp.getByRole("button", { name: "불참" })).toHaveClass(/is-active/);
     await expect(page.locator('a[href*="forms.gle"]')).toHaveCount(0);
+  });
+
+  test("shows the guestbook form even before Supabase is configured locally", async ({ page }) => {
+    await page.goto("/");
+
+    const guestbook = page.locator(".guestbook-section");
+    await guestbook.scrollIntoViewIfNeeded();
+    await expect(guestbook.getByRole("heading", { name: "축하 메시지" })).toBeVisible();
+    await expect(guestbook.getByLabel("이름")).toBeVisible();
+    await expect(guestbook.getByLabel("암호")).toBeVisible();
+    await expect(guestbook.getByLabel("댓글 작성")).toBeVisible();
+    await expect(guestbook.getByRole("button", { name: "댓글 남기기" })).toBeVisible();
+
+    const guestbookHeading = guestbook.getByRole("heading", { name: "축하 메시지" });
+    const rsvpHeading = page.getByRole("heading", { name: "참석 의사를 남겨주세요" });
+    const locationTitle = page.locator(".transport-section .section-head p", { hasText: "Location" });
+    await expect(rsvpHeading).toBeVisible();
+    await expect(locationTitle).toBeVisible();
+    await expect(
+      page.evaluate(
+        ([guestbookElement, rsvpElement, locationElement]) =>
+          Boolean(
+            guestbookElement.compareDocumentPosition(rsvpElement) & Node.DOCUMENT_POSITION_FOLLOWING &&
+              rsvpElement.compareDocumentPosition(locationElement) & Node.DOCUMENT_POSITION_FOLLOWING
+          ),
+        [await guestbookHeading.elementHandle(), await rsvpHeading.elementHandle(), await locationTitle.elementHandle()]
+      )
+    ).resolves.toBe(true);
   });
 
   test("keeps information and gift sections near the bottom", async ({ page }) => {
