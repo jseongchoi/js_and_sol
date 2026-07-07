@@ -1,6 +1,3 @@
--- Run this in Supabase SQL Editor.
--- Replace CHANGE_ME_ADMIN_PASSWORD with the shared admin delete password.
-
 create extension if not exists pgcrypto;
 
 create table if not exists public.guestbook_entries (
@@ -18,7 +15,7 @@ create table if not exists public.guestbook_admin (
 
 insert into public.guestbook_admin (id, password)
 values (true, 'CHANGE_ME_ADMIN_PASSWORD')
-on conflict (id) do update set password = excluded.password;
+on conflict (id) do nothing;
 
 alter table public.guestbook_entries enable row level security;
 alter table public.guestbook_admin enable row level security;
