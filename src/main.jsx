@@ -23,6 +23,7 @@ const asset = (name) => `${import.meta.env.BASE_URL}assets/${name}`;
 const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL ?? "").replace(/\/$/, "");
 const supabaseApiKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? import.meta.env.VITE_SUPABASE_ANON_KEY ?? "";
 const isGuestbookEnabled = Boolean(supabaseUrl && supabaseApiKey);
+const GUESTBOOK_PAGE_SIZE = 10;
 
 const wedding = {
   groom: {
@@ -186,10 +187,13 @@ async function supabaseRequest(path, options = {}) {
   return text ? JSON.parse(text) : null;
 }
 
-function listGuestbookEntries() {
+function listGuestbookEntries(page) {
   return supabaseRequest("/rest/v1/rpc/list_guestbook_entries", {
     method: "POST",
-    body: "{}",
+    body: JSON.stringify({
+      page_size: GUESTBOOK_PAGE_SIZE + 1,
+      page_number: page,
+    }),
   });
 }
 
@@ -698,18 +702,24 @@ function GiftSection({ showToast }) {
 
 function GuestbookSection({ showToast }) {
   const [entries, setEntries] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
   const [form, setForm] = useState({ name: "", password: "", message: "" });
   const [deleteDraft, setDeleteDraft] = useState({ id: null, password: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  async function loadEntries() {
+  async function loadEntries(nextPage = page) {
     if (!isGuestbookEnabled) return;
 
     setIsLoading(true);
     try {
-      setEntries((await listGuestbookEntries()) ?? []);
+      const loadedEntries = (await listGuestbookEntries(nextPage)) ?? [];
+      setEntries(loadedEntries.slice(0, GUESTBOOK_PAGE_SIZE));
+      setHasNextPage(loadedEntries.length > GUESTBOOK_PAGE_SIZE);
+      setPage(nextPage);
+      setDeleteDraft({ id: null, password: "" });
     } catch {
       showToast("축하 메시지를 불러오지 못했습니다.");
     } finally {
@@ -745,7 +755,7 @@ function GuestbookSection({ showToast }) {
     try {
       await createGuestbookEntry(nextEntry);
       setForm({ name: "", password: "", message: "" });
-      await loadEntries();
+      await loadEntries(1);
       showToast("축하 메시지를 남겼습니다.");
     } catch {
       showToast("메시지를 남기지 못했습니다.");
@@ -772,7 +782,7 @@ function GuestbookSection({ showToast }) {
       }
 
       setDeleteDraft({ id: null, password: "" });
-      await loadEntries();
+      await loadEntries(page);
       showToast("메시지를 삭제했습니다.");
     } catch {
       showToast("메시지를 삭제하지 못했습니다.");
@@ -787,44 +797,6 @@ function GuestbookSection({ showToast }) {
         <p>Guest Book</p>
         <h2>축하 메시지</h2>
       </div>
-
-      <form className="guestbook-form" onSubmit={handleSubmit}>
-        <div className="guestbook-fields">
-          <label>
-            <span>이름</span>
-            <input
-              type="text"
-              value={form.name}
-              maxLength={20}
-              autoComplete="name"
-              onChange={(event) => updateForm("name", event.target.value)}
-            />
-          </label>
-          <label>
-            <span>암호</span>
-            <input
-              type="password"
-              value={form.password}
-              maxLength={30}
-              autoComplete="new-password"
-              onChange={(event) => updateForm("password", event.target.value)}
-            />
-          </label>
-        </div>
-        <label>
-          <span>메시지</span>
-          <textarea
-            value={form.message}
-            maxLength={300}
-            rows={4}
-            onChange={(event) => updateForm("message", event.target.value)}
-          />
-        </label>
-        <button className="primary-action wide" type="submit" disabled={isSubmitting}>
-          남기기
-          <MessageCircle size={16} />
-        </button>
-      </form>
 
       <div className="guestbook-list" aria-live="polite">
         {isLoading && <p className="guestbook-empty">불러오는 중입니다.</p>}
@@ -866,6 +838,56 @@ function GuestbookSection({ showToast }) {
             </article>
           ))}
       </div>
+
+      {(page > 1 || hasNextPage) && (
+        <div className="guestbook-pagination" aria-label="축하 메시지 페이지">
+          <button type="button" onClick={() => loadEntries(page - 1)} disabled={isLoading || page === 1}>
+            이전
+          </button>
+          <span>{page}</span>
+          <button type="button" onClick={() => loadEntries(page + 1)} disabled={isLoading || !hasNextPage}>
+            다음
+          </button>
+        </div>
+      )}
+
+      <form className="guestbook-form" onSubmit={handleSubmit}>
+        <div className="guestbook-fields">
+          <label>
+            <span>이름</span>
+            <input
+              type="text"
+              value={form.name}
+              maxLength={20}
+              autoComplete="name"
+              onChange={(event) => updateForm("name", event.target.value)}
+            />
+          </label>
+          <label>
+            <span>암호</span>
+            <input
+              type="password"
+              value={form.password}
+              maxLength={30}
+              autoComplete="new-password"
+              onChange={(event) => updateForm("password", event.target.value)}
+            />
+          </label>
+        </div>
+        <label>
+          <span>메시지</span>
+          <textarea
+            value={form.message}
+            maxLength={300}
+            rows={4}
+            onChange={(event) => updateForm("message", event.target.value)}
+          />
+        </label>
+        <button className="primary-action wide" type="submit" disabled={isSubmitting}>
+          남기기
+          <MessageCircle size={16} />
+        </button>
+      </form>
     </section>
   );
 }

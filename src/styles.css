@@ -1169,6 +1169,36 @@ img {
   color: var(--muted);
 }
 
+.guestbook-pagination {
+  display: grid;
+  grid-template-columns: 74px 1fr 74px;
+  gap: 10px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.guestbook-pagination button {
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 253, 251, 0.78);
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.guestbook-pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.44;
+}
+
+.guestbook-pagination span {
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
 .guestbook-delete-form {
   display: grid;
   grid-template-columns: 1fr 54px 54px;
