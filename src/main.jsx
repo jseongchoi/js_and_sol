@@ -29,7 +29,7 @@ const wedding = {
   groom: {
     name: "최지성",
     shortName: "지성",
-    parents: "故 최정재 · 신순채의 아들",
+    parents: "🌼 최정재 · 신순채의 아들",
   },
   bride: {
     name: "이솔",
@@ -50,7 +50,7 @@ const wedding = {
     hall: "2F 링크홀",
     address: "서울특별시 구로구 경인로 610",
     subway: "1호선 구로역 도보 약 5~7분 · 1/2호선 신도림역 도보 약 10분",
-    parking: "지하주차장 600대, 외부주차장 200대 규모로 총 800여대 주차가 가능하며 하객 1시간 30분 무료 주차로 안내되어 있습니다.",
+    parking: "하객 주차는 1시간 30분 이용 가능합니다.",
   },
   note: "격식은 가볍게, 마음은 깊게. 편안한 걸음으로 와 주세요.",
   accounts: [
@@ -71,10 +71,6 @@ const infoCards = [
   {
     title: "삼성전자 배차 안내",
     text: "출발 장소: 삼성전자 화성캠퍼스 H3\n출발 시간: 오전 9시 10분\n선탑자: 김수지",
-  },
-  {
-    title: "화환 안내",
-    text: "축하의 마음만 감사히 받겠습니다. 편안한 마음으로 참석해 주세요.",
   },
 ];
 
@@ -656,6 +652,9 @@ function GiftSection({ showToast }) {
         <p>For Your Heart</p>
         <h2>마음 전하실 곳</h2>
       </div>
+      <p className="gift-note">
+        부득이하게 참석이 어려우신 분들을 위해 마음 전하실 곳을 남겨두었습니다. 너른 양해 부탁드립니다.
+      </p>
       <div className="account-tabs" role="tablist" aria-label="계좌 구분" onKeyDown={handleAccountTabKeyDown}>
         <button
           id="account-tab-groom"
@@ -1157,12 +1156,12 @@ function App() {
         <InvitationLetter />
         <WeddingDaySection />
         <FamilySection />
-        <InformationSection />
         <GallerySection onOpen={setLightboxItem} triggerRef={galleryTriggerRef} />
         <TransportSection showToast={showToast} />
-        <GiftSection showToast={showToast} />
-        <GuestbookSection showToast={showToast} />
         <RsvpSection onShare={handleShare} showToast={showToast} />
+        <GuestbookSection showToast={showToast} />
+        <InformationSection />
+        <GiftSection showToast={showToast} />
       </main>
       <FloatingDock onShare={handleShare} isHidden={lightboxItem !== null} />
       <footer className="site-footer" aria-hidden={lightboxItem !== null}>
