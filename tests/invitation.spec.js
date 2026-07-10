@@ -92,7 +92,8 @@ test.describe("mobile wedding invitation", () => {
     await page.getByRole("tab", { name: "신랑측에게" }).click();
     await expect(page.getByRole("tabpanel").getByText("신랑 최지성")).toBeVisible();
     await expect(page.getByRole("tabpanel")).toContainText("새마을금고 9003-2507-2080-9");
-    await expect(page.getByRole("tabpanel")).not.toContainText("혼주 신순채");
+    await expect(page.getByRole("tabpanel").getByText("혼주 신순채")).toBeVisible();
+    await expect(page.getByRole("tabpanel")).toContainText("국민은행 282202-04-167507");
   });
 
   test("uses the updated family, information, and gift wording", async ({ page }) => {

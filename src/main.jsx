@@ -55,6 +55,7 @@ const wedding = {
   note: "격식은 가볍게, 마음은 깊게. 편안한 걸음으로 와 주세요.",
   accounts: [
     { side: "groom", owner: "신랑 최지성", bank: "새마을금고", number: "9003-2507-2080-9" },
+    { side: "groom", owner: "혼주 신순채", bank: "국민은행", number: "282202-04-167507" },
     { side: "bride", owner: "신부 이솔", bank: "우리은행", number: "1002-756-5587-19" },
     { side: "bride", owner: "혼주 이돈형", bank: "국민은행", number: "337-24-0043-536" },
     { side: "bride", owner: "혼주 임혜경", bank: "국민은행", number: "807-05-0007-087" },
