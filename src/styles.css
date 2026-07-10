@@ -233,17 +233,17 @@ img {
 
 .hero-writing-script {
   position: absolute;
-  top: clamp(260px, 72vw, 330px);
+  top: clamp(225px, 60vw, 285px);
   left: 50%;
   display: grid;
   width: min(312px, calc(100% - 84px));
   justify-items: center;
-  gap: clamp(8px, 2vw, 12px);
+  gap: clamp(32px, 8vw, 42px);
   color: rgba(219, 245, 194, 0.92);
   font-family: var(--font-script);
   font-size: clamp(3.22rem, 14.8vw, 4.6rem);
   font-weight: 400;
-  line-height: 0.88;
+  line-height: 1;
   text-align: center;
   text-shadow: 0 5px 16px rgba(18, 16, 18, 0.2);
   transform: translate(-50%, -50%) rotate(-3deg);
@@ -269,7 +269,7 @@ img {
 
 .hero-writing-script span:last-child {
   margin-left: auto;
-  font-size: 0.56em;
+  font-size: 0.45em;
   animation-delay: 1160ms, 2800ms;
 }
 
