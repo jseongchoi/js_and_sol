@@ -76,11 +76,9 @@ const infoCards = [
 ];
 
 const invitationLines = [
-  "함께일 때 가장 나다워지는 사람을 만났습니다.",
-  "서로 존중하며 한결같은 마음으로 살아가겠습니다.",
+  "서로 아끼고 존경하는 마음으로 올바른 부부의 삶을 살고자 합니다.",
   "",
-  "귀한 걸음 하시어 축복해 주시면",
-  "더없는 기쁨으로 간직하겠습니다.",
+  "축복과 격려를 전해주시면 더 없이 큰 기쁨으로 간직하겠습니다.",
 ];
 
 const transportCards = [
@@ -94,16 +92,17 @@ const transportCards = [
 
 // 사진 교체/추가 방법은 PHOTO_GUIDE.md를 참고하세요.
 const heroImage = {
-  src: asset("10.jpg"),
-  alt: "웨딩 갤러리 사진 10",
+  src: asset("toourguest/01.jpg"),
+  alt: "신랑 신부 웨딩 메인 사진",
 };
 
-const galleryImages = Array.from({ length: 16 }, (_, index) => ({
-  src: asset(`${index + 1}.jpg`),
+const galleryImages = Array.from({ length: 22 }, (_, index) => ({
+  src: asset(`toourguest/${String(index + 1).padStart(2, "0")}.jpg`),
   alt: `웨딩 갤러리 사진 ${index + 1}`,
 }));
 
-const heroKicker = "We are getting married!";
+const heroKicker = "We are getting married !";
+const heroKickerLines = ["We are getting", "married !"];
 const heroPetals = [
   { left: "6%", size: "13px", delay: "0.1s", duration: "12s", sway: "34px", end: "12px", rotate: "-18deg", alpha: 0.58, mark: "♡" },
   { left: "14%", size: "9px", delay: "2.3s", duration: "15s", sway: "-24px", end: "-8px", rotate: "12deg", alpha: 0.46, mark: "♥" },
@@ -415,28 +414,22 @@ function Hero({ onShare }) {
       </div>
       <div className={`hero-copy ${isCopyVisible ? "is-visible" : ""}`}>
         <p className="hero-kicker" aria-label={heroKicker}>
-          <span aria-hidden="true">
-            {Array.from(heroKicker).map((char, index) => (
-              <span
-                className={`hero-typo-char ${char === " " ? "is-space" : ""}`}
-                key={`${char}-${index}`}
-                style={{ "--char-index": index }}
-              >
-                {char === " " ? "\u00A0" : char}
-              </span>
-            ))}
-          </span>
+          {heroKickerLines.map((line, lineIndex) => (
+            <span className="hero-kicker-line" aria-hidden="true" key={line}>
+              {Array.from(line).map((char, index) => (
+                <span
+                  className={`hero-typo-char ${char === " " ? "is-space" : ""}`}
+                  key={`${char}-${lineIndex}-${index}`}
+                  style={{ "--char-index": index + lineIndex * 14 }}
+                >
+                  {char === " " ? "\u00A0" : char}
+                </span>
+              ))}
+            </span>
+          ))}
         </p>
-        <h1>
-          <span className="hero-name">{wedding.groom.shortName}</span>
-          <span className="hero-amp">&</span>
-          <span className="hero-name">{wedding.bride.shortName}</span>
-        </h1>
         <strong className="hero-meta">
-          <span>
-            {wedding.date.year}. {wedding.date.month}. {wedding.date.day} {wedding.date.weekday}
-          </span>
-          <span>더링크호텔</span>
+          <span>{wedding.date.year}. {wedding.date.month}. {wedding.date.day}. Saturday 10:40</span>
         </strong>
       </div>
       <button className="hero-share" type="button" onClick={onShare} aria-label="청첩장 공유">
@@ -449,152 +442,9 @@ function Hero({ onShare }) {
 function DateMark() {
   return (
     <section className="date-mark-section" data-reveal aria-label="예식 날짜">
-      <div className="save-date-heartfall" aria-hidden="true">
-        {saveDateHearts.map((heart, index) => (
-          <span
-            className="save-date-heart"
-            key={`${heart.left}-${index}`}
-            style={{
-              "--heart-alpha": heart.alpha,
-              "--heart-delay": heart.delay,
-              "--heart-duration": heart.duration,
-              "--heart-end": heart.end,
-              "--heart-left": heart.left,
-              "--heart-rotate": heart.rotate,
-              "--heart-size": heart.size,
-              "--heart-sway": heart.sway,
-            }}
-          >
-            {heart.mark}
-          </span>
-        ))}
-      </div>
-      <div className="save-date-card">
-        <svg className="save-date-art" viewBox="0 0 320 470" aria-hidden="true">
-          <path className="save-ribbon" d="M93 48 C118 12 147 28 160 52 C173 28 202 12 227 48" />
-          <path className="save-ribbon" d="M95 49 C122 76 145 74 160 55 C175 74 198 76 225 49" />
-          <path className="save-ribbon-fill" d="M103 43 C124 23 145 35 158 53 C141 65 119 66 103 43Z" />
-          <path className="save-ribbon-fill" d="M217 43 C196 23 175 35 162 53 C179 65 201 66 217 43Z" />
-          <path className="save-line" d="M154 49 C154 44 166 44 166 49 C166 57 154 57 154 49Z" />
-
-          <path className="save-ribbon" d="M88 72 C46 80 36 104 42 130 C50 164 79 156 72 129" />
-          <path className="save-ribbon" d="M232 72 C274 80 284 104 278 130 C270 164 241 156 248 129" />
-
-          <g className="save-bird save-bird-left">
-            <path d="M52 116 C63 101 80 105 83 119 C92 116 101 120 104 129 C94 130 86 127 80 122 C74 136 58 138 47 126" />
-            <path d="M66 117 C58 114 53 109 49 101" />
-            <path d="M79 116 C86 110 94 108 102 109" />
-            <path d="M104 127 L119 120" />
-            <circle cx="74" cy="115" r="1.5" />
-          </g>
-          <g className="save-bird save-bird-right">
-            <path d="M268 116 C257 101 240 105 237 119 C228 116 219 120 216 129 C226 130 234 127 240 122 C246 136 262 138 273 126" />
-            <path d="M254 117 C262 114 267 109 271 101" />
-            <path d="M241 116 C234 110 226 108 218 109" />
-            <path d="M216 127 L201 120" />
-            <circle cx="246" cy="115" r="1.5" />
-          </g>
-
-          <g className="save-column save-column-left">
-            <path d="M54 205 H104" />
-            <path d="M60 218 H98" />
-            <path d="M68 219 V393" />
-            <path d="M91 219 V393" />
-            <path d="M74 222 C70 270 70 334 74 389" />
-            <path d="M85 222 C89 270 89 334 85 389" />
-            <path d="M58 393 H102" />
-            <path d="M52 407 H108" />
-            <path d="M58 421 H102" />
-            <path className="save-vine" d="M91 244 C73 274 103 298 79 329 C66 347 84 366 72 386" />
-            <path className="save-leaf" d="M81 278 C71 275 68 266 75 260 C84 264 87 272 81 278Z" />
-            <path className="save-leaf" d="M92 314 C103 314 108 323 101 330 C91 327 88 320 92 314Z" />
-            <path className="save-leaf" d="M75 353 C65 351 61 342 68 336 C78 339 81 347 75 353Z" />
-          </g>
-
-          <g className="save-column save-column-right">
-            <path d="M216 205 H266" />
-            <path d="M222 218 H260" />
-            <path d="M230 219 V393" />
-            <path d="M253 219 V393" />
-            <path d="M236 222 C232 270 232 334 236 389" />
-            <path d="M247 222 C251 270 251 334 247 389" />
-            <path d="M220 393 H264" />
-            <path d="M214 407 H270" />
-            <path d="M220 421 H264" />
-            <path className="save-vine" d="M230 244 C248 274 218 298 242 329 C255 347 237 366 249 386" />
-            <path className="save-leaf" d="M240 278 C250 275 253 266 246 260 C237 264 234 272 240 278Z" />
-            <path className="save-leaf" d="M229 314 C218 314 213 323 220 330 C230 327 233 320 229 314Z" />
-            <path className="save-leaf" d="M246 353 C256 351 260 342 253 336 C243 339 240 347 246 353Z" />
-          </g>
-
-          <g className="save-planter save-planter-left">
-            <path d="M45 177 C61 167 99 167 115 177 L108 203 H52Z" />
-            <path d="M55 191 H105" />
-            <path className="save-leaf" d="M63 169 C60 151 74 145 82 160 C74 162 70 167 63 169Z" />
-            <path className="save-leaf" d="M88 169 C90 151 106 151 107 168 C100 165 94 166 88 169Z" />
-            <circle className="save-flower" cx="58" cy="160" r="4" />
-            <circle className="save-flower" cx="78" cy="151" r="4" />
-            <circle className="save-flower" cx="102" cy="160" r="4" />
-            <circle className="save-flower" cx="91" cy="145" r="3" />
-          </g>
-
-          <g className="save-planter save-planter-right">
-            <path d="M205 177 C221 167 259 167 275 177 L268 203 H212Z" />
-            <path d="M215 191 H265" />
-            <path className="save-leaf" d="M223 169 C220 151 234 145 242 160 C234 162 230 167 223 169Z" />
-            <path className="save-leaf" d="M248 169 C250 151 266 151 267 168 C260 165 254 166 248 169Z" />
-            <circle className="save-flower" cx="218" cy="160" r="4" />
-            <circle className="save-flower" cx="238" cy="151" r="4" />
-            <circle className="save-flower" cx="262" cy="160" r="4" />
-            <circle className="save-flower" cx="251" cy="145" r="3" />
-          </g>
-
-          <g className="save-fountain">
-            <path className="save-water" d="M132 334 C142 317 177 317 188 334 C184 350 136 350 132 334Z" />
-            <path d="M126 356 C139 369 181 369 194 356" />
-            <path d="M107 383 C126 404 194 404 213 383" />
-            <path d="M99 389 C115 431 205 431 221 389" />
-            <path className="save-water" d="M123 360 C140 375 180 375 197 360 C190 386 130 386 123 360Z" />
-            <path d="M151 291 C154 314 145 322 133 335" />
-            <path d="M169 291 C166 314 175 322 187 335" />
-            <path className="save-water-line" d="M160 281 C153 302 145 314 136 326" />
-            <path className="save-water-line" d="M160 281 C167 302 175 314 184 326" />
-            <path d="M143 284 C153 276 167 276 177 284 L170 301 H150Z" />
-            <path className="save-leaf" d="M153 273 C144 263 151 253 161 262 C159 267 157 270 153 273Z" />
-            <path className="save-leaf" d="M169 274 C179 263 172 252 161 262 C163 267 166 271 169 274Z" />
-            <circle className="save-flower" cx="150" cy="262" r="4" />
-            <circle className="save-flower" cx="162" cy="254" r="4" />
-            <circle className="save-flower" cx="174" cy="263" r="4" />
-          </g>
-
-          <g className="save-petals">
-            <path d="M121 195 C117 188 124 184 129 189 C127 195 124 197 121 195Z" />
-            <path d="M197 192 C193 185 200 181 205 186 C203 192 200 195 197 192Z" />
-            <path d="M117 238 C113 232 119 228 124 232 C123 238 120 240 117 238Z" />
-            <path d="M205 238 C201 232 207 228 212 232 C211 238 208 240 205 238Z" />
-            <path d="M134 252 C130 246 137 242 142 247 C140 252 137 254 134 252Z" />
-            <path d="M184 252 C180 246 187 242 192 247 C190 252 187 254 184 252Z" />
-          </g>
-        </svg>
-
-        <div className="save-date-content">
-          <p className="save-date-title">
-            Save
-            <span>The Date</span>
-          </p>
-          <p className="save-date-names">
-            <span>JI SEONG</span>
-            <small>and</small>
-            <span>SOL</span>
-          </p>
-          <p className="save-date-venue">
-            THE LINK HOTEL
-            <span>LINK HALL.</span>
-          </p>
-          <p className="save-date-date">
-            {wedding.date.year}.{wedding.date.month}.{wedding.date.day} SAT 10:40
-          </p>
-        </div>
+      <div className="date-mark">
+        <span>Oct 17</span>
+        <strong>2026</strong>
       </div>
     </section>
   );

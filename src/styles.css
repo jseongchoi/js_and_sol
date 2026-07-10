@@ -1917,6 +1917,359 @@ img {
   transform: translate(-50%, 0);
 }
 
+/* To Our Guest inspired visual system */
+:root {
+  --ink: #24242d;
+  --soft-ink: #68646d;
+  --muted: #928d96;
+  --paper: #ffffff;
+  --cream: #ffffff;
+  --mauve: #b58ab5;
+  --mauve-soft: #d2bad4;
+  --mauve-pale: #f5eff6;
+  --gold: #cdbf9f;
+  --gold-soft: #eee4cf;
+  --charcoal: #25242a;
+  --deep: #4a3b47;
+  --line: rgba(44, 40, 48, 0.1);
+  --shadow: 0 18px 42px rgba(80, 74, 85, 0.08);
+  --radius: 10px;
+}
+
+body {
+  background: #ffffff;
+}
+
+body::before {
+  display: none;
+}
+
+.scroll-progress {
+  background: var(--mauve);
+}
+
+.app-shell {
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(34, 31, 38, 0.04);
+}
+
+.primary-action,
+.wide-action {
+  background: var(--mauve);
+  color: #fff;
+}
+
+.ghost-action,
+.copy-button {
+  border-color: rgba(181, 138, 181, 0.18);
+  background: #fff;
+  color: var(--soft-ink);
+}
+
+.hero-section {
+  display: flex;
+  min-height: auto;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  padding: 66px 24px 96px;
+  background: #fff;
+  color: var(--ink);
+}
+
+.hero-photo {
+  position: relative;
+  inset: auto;
+  z-index: 1;
+  width: min(100%, 348px);
+  height: min(520px, 126vw);
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 999px 999px 0 0 / 45% 45% 0 0;
+  transform: none;
+}
+
+.hero-section > .photo-guard {
+  inset: 66px auto auto 50%;
+  z-index: 2;
+  width: min(calc(100% - 48px), 348px);
+  height: min(520px, 126vw);
+  border-radius: 999px 999px 0 0 / 45% 45% 0 0;
+  transform: translateX(-50%);
+}
+
+.hero-overlay {
+  display: none;
+}
+
+.hero-petals {
+  inset: 50px 0 auto;
+  height: min(600px, 148vw);
+  z-index: 3;
+}
+
+.hero-petal {
+  color: rgba(255, 135, 173, var(--petal-alpha));
+  text-shadow: none;
+}
+
+.hero-copy {
+  position: relative;
+  left: auto;
+  right: auto;
+  top: auto;
+  z-index: 4;
+  width: 100%;
+  margin-top: 48px;
+  color: var(--ink);
+  text-shadow: none;
+}
+
+.hero-kicker {
+  display: grid;
+  justify-items: center;
+  color: #171923;
+  font-family: var(--font-script);
+  font-size: 2.76rem;
+  font-weight: 400;
+  line-height: 0.98;
+  text-shadow: none;
+  white-space: nowrap;
+}
+
+.hero-kicker-line {
+  display: block;
+}
+
+.hero-copy strong {
+  display: block;
+  margin-top: 28px;
+  color: #171923;
+  font-size: 1.06rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+}
+
+.hero-typo-char,
+.hero-copy.is-visible .hero-typo-char,
+.hero-copy strong,
+.hero-copy.is-visible strong {
+  animation: none;
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+.hero-meta span:last-child {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+}
+
+.hero-share {
+  top: 24px;
+  right: 20px;
+  bottom: auto;
+  border: 0;
+  background: rgba(54, 52, 56, 0.9);
+  color: #fff;
+}
+
+.date-mark-section {
+  min-height: 650px;
+  padding: 0 28px;
+  background: var(--mauve);
+}
+
+.date-mark {
+  display: grid;
+  gap: 56px;
+  color: #fff;
+  font-family: var(--font-serif);
+  line-height: 0.9;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.date-mark span,
+.date-mark strong {
+  display: block;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.date-mark span {
+  font-size: clamp(5.4rem, 24vw, 8.4rem);
+}
+
+.date-mark strong {
+  font-size: clamp(6.2rem, 28vw, 9.8rem);
+}
+
+.letter-section {
+  padding: 116px 38px 104px;
+  background: #fff;
+}
+
+.letter-heart {
+  color: var(--mauve);
+}
+
+.letter-lines {
+  color: #171923;
+  font-family: "Noto Serif KR", var(--font-serif);
+  font-size: 1.14rem;
+  line-height: 2.16;
+}
+
+.couple-sign {
+  margin-top: 46px;
+  color: #171923;
+  font-size: 1rem;
+}
+
+.section-block {
+  padding-top: 92px;
+  padding-bottom: 92px;
+}
+
+.lavender-block,
+.wedding-day-section {
+  background: var(--mauve-pale);
+}
+
+.section-head p {
+  color: #3d3940;
+  font-size: 2.08rem;
+  letter-spacing: 0.05em;
+}
+
+.section-head p::after {
+  background: linear-gradient(90deg, transparent, var(--mauve), transparent);
+}
+
+.section-head h2 {
+  color: #4b4650;
+  font-size: 1.03rem;
+}
+
+.section-head span {
+  color: var(--muted);
+}
+
+.calendar-card {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.calendar-title {
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(74, 66, 76, 0.14);
+}
+
+.calendar-month {
+  gap: 18px 8px;
+  margin-top: 30px;
+}
+
+.calendar-month b {
+  color: #171923;
+  font-size: 1rem;
+}
+
+.calendar-month b:first-child,
+.calendar-month span:nth-child(7n + 8) {
+  color: #ff7474;
+}
+
+.calendar-month span,
+.calendar-month i {
+  min-height: 42px;
+  font-family: var(--font-serif);
+  font-size: 1.16rem;
+}
+
+.calendar-heart {
+  color: var(--mauve);
+}
+
+.countdown-strip {
+  gap: 12px;
+}
+
+.countdown-strip div {
+  border: 0;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 12px 24px rgba(72, 63, 75, 0.08);
+}
+
+.family-row {
+  grid-template-columns: 1fr auto;
+  padding: 24px 0;
+}
+
+.family-row span,
+.family-row b {
+  color: #3f3a42;
+  font-size: 1rem;
+}
+
+.gallery-section {
+  background: #fff;
+  padding-inline: 0;
+}
+
+.gallery-section .section-head {
+  padding-inline: 32px;
+}
+
+.gallery-section .section-head::after {
+  display: block;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+  content: "사진을 클릭하시면 전체 화면 보기가 가능합니다";
+}
+
+.gallery-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2px;
+  margin-top: 64px;
+}
+
+.gallery-tile {
+  border-radius: 0;
+  box-shadow: none;
+  aspect-ratio: 1 / 1;
+}
+
+.map-card,
+.info-card,
+.guestbook-card,
+.account-card {
+  border-color: rgba(181, 138, 181, 0.14);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: none;
+}
+
+.info-card::before,
+.map-card::before,
+.account-card::before {
+  background: var(--mauve);
+}
+
+.floating-dock {
+  border-color: rgba(181, 138, 181, 0.16);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 12px 32px rgba(74, 66, 76, 0.1);
+}
+
 @media (max-width: 380px) {
   .section-block {
     padding-inline: 26px;

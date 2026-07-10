@@ -7,9 +7,9 @@ test.describe("mobile wedding invitation", () => {
     await expect(page.getByRole("dialog", { name: "청첩장 열기" })).toHaveCount(0);
     await expect(page.locator(".opening-envelope")).toHaveCount(0);
     await expect(page.locator(".topbar")).toHaveCount(0);
-    await expect(page.locator(".hero-copy h1")).toContainText("지성");
-    await expect(page.locator(".hero-copy h1")).toContainText("솔");
-    await expect(page.getByText("2026.10.17").first()).toBeVisible();
+    await expect(page.locator(".hero-photo")).toBeVisible();
+    await expect(page.locator(".hero-kicker")).toHaveAttribute("aria-label", "We are getting married !");
+    await expect(page.getByText("2026. 10. 17. Saturday 10:40")).toBeVisible();
     await expect(page.locator("body")).toContainText("더링크 웨딩홀");
     await expect(page.locator("body")).toContainText("2F 링크홀");
     await expect(page.locator("body")).toContainText("최정재");
@@ -42,8 +42,8 @@ test.describe("mobile wedding invitation", () => {
   test("keeps the handwritten accent font scoped to large titles", async ({ page }) => {
     await page.goto("/");
 
-    await expect(page.locator(".hero-copy h1")).toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
-    await expect(page.locator(".save-date-title")).toHaveCSS("font-family", /Great Vibes/);
+    await expect(page.locator(".hero-kicker")).toHaveCSS("font-family", /Great Vibes/);
+    await expect(page.locator(".date-mark span")).not.toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
     await expect(page.locator(".section-head h2").first()).not.toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
     await expect(page.locator(".info-card strong").first()).not.toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
   });
@@ -63,11 +63,11 @@ test.describe("mobile wedding invitation", () => {
     const dialog = page.getByRole("dialog", { name: "사진 크게 보기" });
     await expect(dialog).toBeVisible();
     await expect(dialog.locator("img.lightbox-photo")).toBeVisible();
-    await expect(dialog.locator(".lightbox-count")).toHaveText("1 / 16");
+    await expect(dialog.locator(".lightbox-count")).toHaveText("1 / 22");
     await dialog.locator(".lightbox-next").click();
-    await expect(dialog.locator(".lightbox-count")).toHaveText("2 / 16");
+    await expect(dialog.locator(".lightbox-count")).toHaveText("2 / 22");
     await page.keyboard.press("ArrowLeft");
-    await expect(dialog.locator(".lightbox-count")).toHaveText("1 / 16");
+    await expect(dialog.locator(".lightbox-count")).toHaveText("1 / 22");
 
     await page.keyboard.press("Escape");
     await expect(dialog).toHaveCount(0);
