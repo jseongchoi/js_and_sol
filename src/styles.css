@@ -2128,8 +2128,8 @@ body::before {
 }
 
 .hero-petal {
-  color: rgba(255, 135, 173, var(--petal-alpha));
-  text-shadow: none;
+  color: rgba(236, 101, 145, var(--petal-alpha));
+  text-shadow: 0 2px 8px rgba(255, 146, 178, 0.2);
 }
 
 .hero-copy {

@@ -8,6 +8,7 @@ test.describe("mobile wedding invitation", () => {
     await expect(page.locator(".opening-envelope")).toHaveCount(0);
     await expect(page.locator(".topbar")).toHaveCount(0);
     await expect(page.locator(".hero-photo")).toBeVisible();
+    await expect(page.locator(".hero-petal")).toHaveCount(27);
     await expect(page.locator(".hero-writing-layer")).toContainText("Happily");
     await expect(page.locator(".hero-writing-layer")).toContainText("ever after");
     await expect(page.locator(".hero-kicker")).toHaveAttribute("aria-label", "We are getting married !");
