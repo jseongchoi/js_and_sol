@@ -233,23 +233,27 @@ img {
 
 .hero-writing-script {
   position: absolute;
-  top: clamp(306px, 95vw, 398px);
+  top: clamp(350px, 104vw, 430px);
   left: 50%;
-  width: min(344px, calc(100% - 54px));
+  display: grid;
+  width: min(312px, calc(100% - 84px));
+  justify-items: center;
+  gap: clamp(8px, 2vw, 12px);
   color: rgba(219, 245, 194, 0.92);
   font-family: var(--font-script);
-  font-size: clamp(3.8rem, 17vw, 5.25rem);
+  font-size: clamp(3.22rem, 14.8vw, 4.6rem);
   font-weight: 400;
-  line-height: 0.72;
-  text-align: left;
+  line-height: 0.88;
+  text-align: center;
   text-shadow: 0 5px 16px rgba(18, 16, 18, 0.2);
-  transform: translateX(-50%) rotate(-4deg);
+  transform: translate(-50%, -50%) rotate(-3deg);
 }
 
 .hero-writing-script span {
   display: block;
   width: max-content;
   max-width: 100%;
+  margin-inline: auto;
   overflow: visible;
   white-space: nowrap;
   clip-path: inset(-22% 100% -28% 0);
@@ -260,13 +264,12 @@ img {
 }
 
 .hero-writing-script span:first-child {
-  margin-left: 0.16em;
+  margin-left: auto;
 }
 
 .hero-writing-script span:last-child {
-  margin-top: -0.03em;
-  margin-left: 1.02em;
-  font-size: 0.68em;
+  margin-left: auto;
+  font-size: 0.56em;
   animation-delay: 1160ms, 2800ms;
 }
 
