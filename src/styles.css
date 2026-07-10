@@ -233,7 +233,7 @@ img {
 
 .hero-writing-script {
   position: absolute;
-  top: clamp(350px, 104vw, 430px);
+  top: clamp(260px, 72vw, 330px);
   left: 50%;
   display: grid;
   width: min(312px, calc(100% - 84px));
