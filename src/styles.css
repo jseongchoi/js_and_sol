@@ -7,10 +7,16 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Sacramento Local";
+  src: url("/assets/sacramento.ttf") format("truetype");
+  font-display: swap;
+}
+
 :root {
   --font-sans: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   --font-serif: "Cormorant Garamond", "Noto Serif KR", "Batang", serif;
-  --font-script: "Great Vibes", "Cormorant Garamond", cursive;
+  --font-script: "Sacramento Local", "Great Vibes", "Cormorant Garamond", cursive;
   --font-hand: "Nanum NaMuJeongWeon", "Noto Serif KR", "Apple SD Gothic Neo", serif;
   --ink: #2e2528;
   --soft-ink: #695a60;
@@ -206,6 +212,64 @@ img {
     linear-gradient(90deg, rgba(12, 10, 11, 0.5), transparent 45% 55%, rgba(12, 10, 11, 0.5));
 }
 
+.hero-writing-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  overflow: hidden;
+  pointer-events: none;
+  animation: heroWritingLayer 3600ms ease forwards;
+  will-change: opacity, visibility;
+}
+
+.hero-writing-layer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(47, 43, 47, 0.54);
+  backdrop-filter: blur(1.2px);
+  animation: heroWritingBackdrop 3600ms ease forwards;
+}
+
+.hero-writing-script {
+  position: absolute;
+  top: clamp(306px, 95vw, 398px);
+  left: 50%;
+  width: min(344px, calc(100% - 54px));
+  color: rgba(219, 245, 194, 0.92);
+  font-family: var(--font-script);
+  font-size: clamp(3.8rem, 17vw, 5.25rem);
+  font-weight: 400;
+  line-height: 0.72;
+  text-align: left;
+  text-shadow: 0 5px 16px rgba(18, 16, 18, 0.2);
+  transform: translateX(-50%) rotate(-4deg);
+}
+
+.hero-writing-script span {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow: visible;
+  white-space: nowrap;
+  clip-path: inset(-22% 100% -28% 0);
+  opacity: 0;
+  animation:
+    heroHandwriteLine 1180ms cubic-bezier(0.18, 0.86, 0.28, 1) 520ms forwards,
+    heroWritingInkFade 650ms ease 2800ms forwards;
+}
+
+.hero-writing-script span:first-child {
+  margin-left: 0.16em;
+}
+
+.hero-writing-script span:last-child {
+  margin-top: -0.03em;
+  margin-left: 1.02em;
+  font-size: 0.68em;
+  animation-delay: 1160ms, 2800ms;
+}
+
 .hero-petals {
   position: absolute;
   inset: -18% 0 0;
@@ -392,6 +456,58 @@ img {
     opacity: 1;
     filter: blur(0);
     transform: translateY(0) rotate(0) scale(1);
+  }
+}
+
+@keyframes heroWritingLayer {
+  0%,
+  76% {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes heroWritingBackdrop {
+  0%,
+  62% {
+    background: rgba(47, 43, 47, 0.54);
+    backdrop-filter: blur(1.2px);
+  }
+
+  100% {
+    background: rgba(47, 43, 47, 0);
+    backdrop-filter: blur(0);
+  }
+}
+
+@keyframes heroHandwriteLine {
+  0% {
+    opacity: 0;
+    clip-path: inset(-22% 100% -28% 0);
+    transform: translate3d(-2px, 5px, 0);
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+    clip-path: inset(-22% -8% -28% 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes heroWritingInkFade {
+  to {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translate3d(0, -8px, 0);
   }
 }
 
@@ -2030,7 +2146,7 @@ body::before {
   justify-items: center;
   color: #171923;
   font-family: var(--font-script);
-  font-size: 2.76rem;
+  font-size: 3.32rem;
   font-weight: 400;
   line-height: 0.98;
   text-shadow: none;
@@ -2328,6 +2444,7 @@ body::before {
   }
 
   .hero-petals,
+  .hero-writing-layer,
   .save-date-heartfall {
     display: none;
   }

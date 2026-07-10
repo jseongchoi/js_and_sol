@@ -8,6 +8,8 @@ test.describe("mobile wedding invitation", () => {
     await expect(page.locator(".opening-envelope")).toHaveCount(0);
     await expect(page.locator(".topbar")).toHaveCount(0);
     await expect(page.locator(".hero-photo")).toBeVisible();
+    await expect(page.locator(".hero-writing-layer")).toContainText("Happily");
+    await expect(page.locator(".hero-writing-layer")).toContainText("ever after");
     await expect(page.locator(".hero-kicker")).toHaveAttribute("aria-label", "We are getting married !");
     await expect(page.getByText("2026. 10. 17. Saturday 10:40")).toBeVisible();
     await expect(page.locator("body")).toContainText("더링크 웨딩홀");
@@ -42,7 +44,7 @@ test.describe("mobile wedding invitation", () => {
   test("keeps the handwritten accent font scoped to large titles", async ({ page }) => {
     await page.goto("/");
 
-    await expect(page.locator(".hero-kicker")).toHaveCSS("font-family", /Great Vibes/);
+    await expect(page.locator(".hero-kicker")).toHaveCSS("font-family", /Sacramento/);
     await expect(page.locator(".date-mark span")).not.toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
     await expect(page.locator(".section-head h2").first()).not.toHaveCSS("font-family", /Nanum NaMuJeongWeon/);
     await expect(page.locator(".info-card strong").first()).not.toHaveCSS("font-family", /Nanum NaMuJeongWeon/);

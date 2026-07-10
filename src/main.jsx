@@ -392,6 +392,12 @@ function Hero({ onShare }) {
       />
       <span className="photo-guard" aria-hidden="true" data-protected-image />
       <div className="hero-overlay" />
+      <div className="hero-writing-layer" aria-hidden="true">
+        <div className="hero-writing-script">
+          <span>Happily</span>
+          <span>ever after</span>
+        </div>
+      </div>
       <div className="hero-petals" aria-hidden="true">
         {heroPetals.map((petal, index) => (
           <span
